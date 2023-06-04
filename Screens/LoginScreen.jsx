@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   Image,
+  KeyboardAvoidingView,
   StyleSheet,
   ImageBackground,
 } from "react-native";
@@ -21,49 +22,57 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("../images/PhotoBG.jpg")}
-        resizeMode="cover"
-        style={styles.backgroundImage}
-      >
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Увійти</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <View style={styles.passwordContainer}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={-260}
+    >
+      <View style={styles.container}>
+        <ImageBackground
+          source={require("../images/PhotoBG.jpg")}
+          resizeMode="cover"
+          style={styles.backgroundImage}
+        >
+          <View style={styles.formContainer}>
+            <Text style={styles.title}>Увійти</Text>
             <TextInput
               style={styles.input}
-              placeholder="Пароль"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
+              placeholder="Адреса електронної пошти"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
             />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Пароль"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+              <TouchableOpacity
+                onPress={() => console.log("Перехід до сторінки логіну")}
+              >
+                <Text style={styles.showHideText}>Показати</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleRegistration}
+            >
+              <Text style={styles.submitButtonText}>Увійти</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => console.log("Перехід до сторінки логіну")}
             >
-              <Text style={styles.showHideText}>Показати</Text>
+              <Text style={styles.loginLink}>
+                Немає акаунту? Зареєструватися
+              </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={handleRegistration}
-          >
-            <Text style={styles.submitButtonText}>Увійти</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Перехід до сторінки логіну")}
-          >
-            <Text style={styles.loginLink}>Немає акаунту? Зареєструватися</Text>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -110,7 +119,7 @@ const styles = StyleSheet.create({
 
   title: {
     marginBottom: 33,
-    
+
     color: "#20232a",
 
     fontFamily: "Roboto-Medium",
