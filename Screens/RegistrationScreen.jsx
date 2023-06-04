@@ -7,7 +7,9 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
+  Keyboard,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
   Platform,
 } from "react-native";
 
@@ -23,16 +25,17 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={-185}
-    >
-      <ImageBackground
-        source={require("../images/PhotoBG.jpg")}
-        resizeMode="cover"
-        style={styles.backgroundImage}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={-185}
       >
+        <ImageBackground
+          source={require("../images/PhotoBG.jpg")}
+          resizeMode="cover"
+          style={styles.backgroundImage}
+        ></ImageBackground>
         <View style={styles.formContainer}>
           <View style={styles.profileIcon}>
             <TouchableOpacity onPress={() => console.log("")}>
@@ -82,8 +85,8 @@ const RegistrationScreen = () => {
             <Text style={styles.loginLink}>Вже є акаунт? Увійти</Text>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -93,7 +96,9 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
+
     justifyContent: "center",
+    alignContent: "center",
   },
 
   formContainer: {
@@ -130,7 +135,7 @@ const styles = StyleSheet.create({
 
   title: {
     marginBottom: 33,
-    
+
     color: "#20232a",
 
     fontFamily: "Roboto-Medium",
@@ -173,8 +178,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   loginLink: {
-    marginTop: 16,
-
     textAlign: "center",
     textDecorationLine: "underline",
 

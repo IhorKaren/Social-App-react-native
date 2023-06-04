@@ -4,35 +4,35 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
-  Image,
+  Keyboard,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
   StyleSheet,
   ImageBackground,
 } from "react-native";
 
 const LoginScreen = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleRegistration = () => {
-    console.log("Name:", name);
     console.log("Email:", email);
     console.log("Password:", password);
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={-260}
-    >
-      <View style={styles.container}>
-        <ImageBackground
-          source={require("../images/PhotoBG.jpg")}
-          resizeMode="cover"
-          style={styles.backgroundImage}
-        >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={-260}
+      >
+        <View style={styles.container}>
+          <ImageBackground
+            source={require("../images/PhotoBG.jpg")}
+            resizeMode="cover"
+            style={styles.backgroundImage}
+          ></ImageBackground>
           <View style={styles.formContainer}>
             <Text style={styles.title}>Увійти</Text>
             <TextInput
@@ -70,9 +70,9 @@ const LoginScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        </ImageBackground>
-      </View>
-    </KeyboardAvoidingView>
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-
   formContainer: {
     position: "absolute",
     display: "flex",
@@ -162,8 +161,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   loginLink: {
-    marginTop: 16,
-
     textAlign: "center",
     textDecorationLine: "underline",
 
