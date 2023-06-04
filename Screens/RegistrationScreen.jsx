@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -17,6 +17,28 @@ const RegistrationScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardOpen(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardOpen(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const handleRegistration = () => {
     console.log("Name:", name.trim());
@@ -27,27 +49,28 @@ const RegistrationScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <ImageBackground
+        <Image
           source={require("../images/PhotoBG.jpg")}
           resizeMode="cover"
           style={styles.backgroundImage}
+        />
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={-100}
         >
-          <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={-185}
-          >
-            <View style={styles.formContainer}>
-              <View style={styles.profileIcon}>
-                <TouchableOpacity onPress={() => console.log("")}>
-                  <Image
-                    source={require("../images/add.png")}
-                    style={styles.addPicture}
-                  />
-                </TouchableOpacity>
-              </View>
+          <View style={styles.formContainer}>
+            <View style={styles.profileIcon}>
+              <TouchableOpacity onPress={() => console.log("")}>
+                <Image
+                  source={require("../images/add.png")}
+                  style={styles.addPicture}
+                />
+              </TouchableOpacity>
+            </View>
 
-              <Text style={styles.title}>Реєстрація</Text>
+            <Text style={styles.title}>Реєстрація</Text>
+            <View style={styles.form}>
               <TextInput
                 style={styles.input}
                 placeholder="Логін"
@@ -75,22 +98,26 @@ const RegistrationScreen = () => {
                   <Text style={styles.showHideText}>Показати</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={styles.submitButton}
-                onPress={handleRegistration}
-              >
-                <Text style={styles.submitButtonText}>Зареєструватися</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => console.log("Перехід до сторінки логіну")}
-              >
-                <Text style={styles.loginText}>
-                  Вже є акаунт? <Text style={styles.loginLink}>Увійти</Text>
-                </Text>
-              </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
-        </ImageBackground>
+            {!keyboardOpen && (
+              <>
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={handleRegistration}
+                >
+                  <Text style={styles.submitButtonText}>Зареєструватися</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => console.log("Перехід до сторінки логіну")}
+                >
+                  <Text style={styles.loginText}>
+                    Вже є акаунт? <Text style={styles.loginLink}>Увійти</Text>
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -100,22 +127,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  
   backgroundImage: {
-    flex: 1,
-
-    justifyContent: "center",
-    alignContent: "center",
+    width: "100%",
+    position: "absolute",
   },
 
   formContainer: {
-    position: "absolute",
-    display: "flex",
-    gap: 16,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    marginTop: "auto",
     paddingHorizontal: 16,
-    paddingTop: 94,
+    paddingTop: 92,
     paddingBottom: 78,
 
     borderTopLeftRadius: 25,
@@ -123,6 +144,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#FFFFFF",
   },
+
   profileIcon: {
     position: "absolute",
     top: -60,
@@ -133,6 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
   },
+
   addPicture: {
     position: "absolute",
     bottom: -105,
@@ -148,6 +171,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 30,
   },
+
+  form: {
+    display: "flex",
+    gap: 16,
+    marginBottom: 43,
+  },
+
   input: {
     width: "100%",
     fontSize: 16,
@@ -160,6 +190,7 @@ const styles = StyleSheet.create({
 
     padding: 16,
   },
+
   showHideText: {
     position: "absolute",
     bottom: 16,
@@ -171,22 +202,27 @@ const styles = StyleSheet.create({
 
     color: "#1B4371",
   },
+
   submitButton: {
+    marginBottom: 16,
     paddingVertical: 16,
     borderRadius: 100,
 
     backgroundColor: "#FF6C00",
   },
+
   submitButtonText: {
     textAlign: "center",
     fontSize: 16,
 
     color: "#FFFFFF",
   },
+
   loginText: {
     textAlign: "center",
     color: "#1B4371",
   },
+
   loginLink: {
     textAlign: "center",
     textDecorationLine: "underline",
