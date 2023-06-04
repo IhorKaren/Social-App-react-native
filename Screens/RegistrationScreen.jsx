@@ -7,6 +7,8 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 const RegistrationScreen = () => {
@@ -21,7 +23,11 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={-190}
+    >
       <ImageBackground
         source={require("../images/PhotoBG.jpg")}
         resizeMode="cover"
@@ -77,7 +83,7 @@ const RegistrationScreen = () => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
