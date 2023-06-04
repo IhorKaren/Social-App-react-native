@@ -20,8 +20,8 @@ export default function App() {
     <>
       <StatusBar style="auto" />
       {/* <PostsScreen /> */}
-      {/* <LoginScreen /> */}
-      <RegistrationScreen />
+      <LoginScreen />
+      {/* <RegistrationScreen /> */}
     </>
   );
 }

@@ -16,8 +16,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
 
   const handleRegistration = () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
+    console.log("Email:", email.trim());
+    console.log("Password:", password.trim());
   };
 
   return (
