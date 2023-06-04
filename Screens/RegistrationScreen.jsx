@@ -26,66 +26,70 @@ const RegistrationScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-185}
-      >
+      <View style={styles.container}>
         <ImageBackground
           source={require("../images/PhotoBG.jpg")}
           resizeMode="cover"
           style={styles.backgroundImage}
-        ></ImageBackground>
-        <View style={styles.formContainer}>
-          <View style={styles.profileIcon}>
-            <TouchableOpacity onPress={() => console.log("")}>
-              <Image
-                source={require("../images/add.png")}
-                style={styles.addPicture}
+        >
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={-185}
+          >
+            <View style={styles.formContainer}>
+              <View style={styles.profileIcon}>
+                <TouchableOpacity onPress={() => console.log("")}>
+                  <Image
+                    source={require("../images/add.png")}
+                    style={styles.addPicture}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <Text style={styles.title}>Реєстрація</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Логін"
+                value={name}
+                onChangeText={setName}
               />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.title}>Реєстрація</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Логін"
-            value={name}
-            onChangeText={setName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Пароль"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
-            <TouchableOpacity
-              onPress={() => console.log("Перехід до сторінки логіну")}
-            >
-              <Text style={styles.showHideText}>Показати</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={handleRegistration}
-          >
-            <Text style={styles.submitButtonText}>Зареєструватися</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => console.log("Перехід до сторінки логіну")}
-          >
-            <Text style={styles.loginLink}>Вже є акаунт? Увійти</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+              <TextInput
+                style={styles.input}
+                placeholder="Адреса електронної пошти"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Пароль"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                />
+                <TouchableOpacity
+                  onPress={() => console.log("Перехід до сторінки логіну")}
+                >
+                  <Text style={styles.showHideText}>Показати</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleRegistration}
+              >
+                <Text style={styles.submitButtonText}>Зареєструватися</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => console.log("Перехід до сторінки логіну")}
+              >
+                <Text style={styles.loginLink}>Вже є акаунт? Увійти</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
