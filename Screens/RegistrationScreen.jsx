@@ -84,7 +84,9 @@ const RegistrationScreen = () => {
               <TouchableOpacity
                 onPress={() => console.log("Перехід до сторінки логіну")}
               >
-                <Text style={styles.loginLink}>Вже є акаунт? Увійти</Text>
+                <Text style={styles.loginText}>
+                  Вже є акаунт? <Text style={styles.loginLink}>Увійти</Text>
+                </Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -180,6 +182,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
 
     color: "#FFFFFF",
+  },
+  loginText: {
+    textAlign: "center",
+    color: "#1B4371",
   },
   loginLink: {
     textAlign: "center",

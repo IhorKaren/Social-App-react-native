@@ -65,8 +65,9 @@ const LoginScreen = () => {
               <TouchableOpacity
                 onPress={() => console.log("Перехід до сторінки логіну")}
               >
-                <Text style={styles.loginLink}>
-                  Немає акаунту? Зареєструватися
+                <Text style={styles.loginText}>
+                  Немає акаунту?{" "}
+                  <Text style={styles.loginLink}>Зареєструватися</Text>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -160,6 +161,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
 
     color: "#FFFFFF",
+  },
+  loginText: {
+    textAlign: "center",
+    color: "#1B4371",
   },
   loginLink: {
     textAlign: "center",
