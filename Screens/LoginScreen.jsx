@@ -11,11 +11,14 @@ import {
   TouchableWithoutFeedback,
   Platform,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -85,16 +88,20 @@ const LoginScreen = () => {
               <>
                 <TouchableOpacity
                   style={styles.submitButton}
-                  onPress={handleRegistration}
+                  onPress={() => navigation.navigate("Home")}
                 >
                   <Text style={styles.submitButtonText}>Увійти</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => console.log("Перехід до сторінки логіну")}
-                >
+                <TouchableOpacity>
                   <Text style={styles.loginText}>
                     Немає акаунту?
-                    <Text style={styles.loginLink}> Зареєструватися</Text>
+                    <Text
+                      style={styles.loginLink}
+                      onPress={() => navigation.navigate("Registration")}
+                    >
+                      {" "}
+                      Зареєструватися
+                    </Text>
                   </Text>
                 </TouchableOpacity>
               </>

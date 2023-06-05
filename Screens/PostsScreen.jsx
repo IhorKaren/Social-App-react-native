@@ -1,74 +1,45 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const PostsScreen = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Публікації</Text>
-        <View>
-          <TouchableOpacity
-            style={styles.logOutBtn}
-            onPress={() => console.log("")}
-          >
-            <Image
-              source={require("../images/log-out.png")}
-              style={styles.addPicture}
-            />
-          </TouchableOpacity>
+    <>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Публікації</Text>
+          <View>
+            <TouchableOpacity
+              style={styles.logOutBtn}
+              onPress={() => console.log("")}
+            >
+              <Ionicons name="log-out-outline" size={24} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      <View style={styles.content}>
-        <View>
-          <View style={styles.user}>
-            <View style={styles.avatar}></View>
-            <View style={styles.thumb}>
-              <View>
-                <Text style={styles.name}>Natali Romanova</Text>
-              </View>
-              <View>
-                <Text style={styles.email}>email@example.com</Text>
+        <View style={styles.content}>
+          <View>
+            <View style={styles.user}>
+              <View style={styles.avatar}></View>
+              <View style={styles.thumb}>
+                <View>
+                  <Text style={styles.name}>Natali Romanova</Text>
+                </View>
+                <View>
+                  <Text style={styles.email}>email@example.com</Text>
+                </View>
               </View>
             </View>
           </View>
         </View>
       </View>
-      <View style={styles.navigation}>
-        <View>
-          <TouchableOpacity
-            style={styles.navButton}
-            onPress={() => console.log("")}
-          >
-            <Image
-              source={require("../images/menu.png")}
-              style={styles.addPicture}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.mainButton}
-            onPress={() => console.log("")}
-          >
-            <Image
-              source={require("../images/whitePlus.png")}
-              style={styles.addPicture}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.navButton}
-            onPress={() => console.log("")}
-          >
-            <Image
-              source={require("../images/user.png")}
-              style={styles.addPicture}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    </>
   );
 };
 
@@ -82,11 +53,13 @@ const styles = StyleSheet.create({
 
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0, 0, 0, 0.3)",
+    backgroundColor: "#FFFFFF",
   },
+
   logOutBtn: {
     position: "absolute",
     bottom: 0,
-    right: 16,
+    right: 20,
   },
   headerText: {
     textAlign: "center",

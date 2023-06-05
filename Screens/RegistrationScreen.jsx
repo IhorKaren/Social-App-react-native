@@ -12,12 +12,15 @@ import {
   TouchableWithoutFeedback,
   Platform,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const RegistrationScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -103,15 +106,19 @@ const RegistrationScreen = () => {
               <>
                 <TouchableOpacity
                   style={styles.submitButton}
-                  onPress={handleRegistration}
+                  onPress={() => navigation.navigate("Home")}
                 >
                   <Text style={styles.submitButtonText}>Зареєструватися</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => console.log("Перехід до сторінки логіну")}
-                >
+                <TouchableOpacity>
                   <Text style={styles.loginText}>
-                    Вже є акаунт? <Text style={styles.loginLink}>Увійти</Text>
+                    Вже є акаунт?{" "}
+                    <Text
+                      style={styles.loginLink}
+                      onPress={() => navigation.navigate("Login")}
+                    >
+                      Увійти
+                    </Text>
                   </Text>
                 </TouchableOpacity>
               </>
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  
+
   backgroundImage: {
     width: "100%",
     position: "absolute",
