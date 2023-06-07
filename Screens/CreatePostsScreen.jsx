@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   TouchableOpacity,
@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
+import AppContext from "../AppContext";
 
 const CreatePostsScreen = () => {
   const [location, setLocation] = useState(null);
@@ -26,6 +27,10 @@ const CreatePostsScreen = () => {
   const [photoUri, setPhotoUri] = useState(null);
 
   const navigation = useNavigation();
+
+  const { setParams } = useContext(AppContext);
+
+  
 
   useEffect(() => {
     (async () => {
@@ -43,9 +48,7 @@ const CreatePostsScreen = () => {
     return <Text>No access to camera</Text>;
   }
 
-  const handleSubmit = async () => {
-    await checkLocation();
-
+  const handleSubmit = () => {
     const post = {
       photoUri,
       name,
@@ -53,8 +56,8 @@ const CreatePostsScreen = () => {
       location,
     };
 
-    navigation.navigate("User", [post]);
-
+    setParams([post]);
+    navigation.navigate("Menu");
     setPhotoUri(null);
     setAddress("");
     setName("");
@@ -87,6 +90,8 @@ const CreatePostsScreen = () => {
     };
     setLocation(coords);
   };
+
+  checkLocation();
 
   const choosePhoto = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -193,7 +198,7 @@ const CreatePostsScreen = () => {
             </View>
             <TouchableOpacity
               style={submitCheck ? styles.submitButton : styles.disabledButton}
-              onPress={handleSubmit}
+              onPress={() => handleSubmit()}
               disabled={!submitCheck}
             >
               <Text

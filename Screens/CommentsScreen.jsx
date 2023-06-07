@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -10,10 +10,33 @@ import {
   TextInput,
   StyleSheet,
   Platform,
+  ScrollView,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { format } from "date-fns";
+import { uk } from "date-fns/locale";
 
 const CommentsScreen = () => {
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+
+  const { params } = useRoute();
+
+  const navigation = useNavigation();
+
+  const handleCommentSubmit = () => {
+    if (comment.trim() === '') {
+      return
+    }
+    setComments((s) => [...s, { date: Date.now(), text: comment }]);
+    setComment("");
+  };
+
+  const dateFormated = (date) => {
+    return format(date, "dd MMMM, yyyy | HH:mm", { locale: uk });
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
@@ -32,17 +55,44 @@ const CommentsScreen = () => {
         </View>
 
         <View style={styles.content}>
+          {params && (
+            <View style={styles.post}>
+              <Image style={styles.postImage} source={{ uri: params }} />
+            </View>
+          )}
+          <ScrollView>
+            {comments.length > 0 && (
+              <View style={styles.comments}>
+                {comments.map((el) => {
+                  return (
+                    <View key={el.date} style={styles.commentsWrap}>
+                      <View style={styles.avatar}></View>
+                      <View style={styles.commentThumb}>
+                        <Text style={styles.commentText}>{el.text}</Text>
+                        <Text style={styles.commentDate}>
+                          {dateFormated(el.date)}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </ScrollView>
+
           <View style={styles.inputThumb}>
             <TextInput
               style={styles.input}
               placeholder="Коментувати..."
               placeholderTextColor="#BDBDBD"
-              // value={email}
-              // onChangeText={setEmail}
+              value={comment}
+              onChangeText={setComment}
             />
-            <View style={styles.arrow}>
-              <Ionicons name="arrow-up-outline" size={24} color="#FFFFFF" />
-            </View>
+            <TouchableOpacity onPress={handleCommentSubmit}>
+              <View style={styles.arrow}>
+                <Ionicons name="arrow-up-outline" size={24} color="#FFFFFF" />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -81,6 +131,57 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: "#FFFFFF",
   },
+
+  post: {
+    marginBottom: 34,
+  },
+  postImage: {
+    width: "100%",
+    height: 240,
+
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  comments: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+
+    paddingBottom: 30,
+  },
+  commentsWrap: {
+    display: "flex",
+    flexDirection: "row-reverse",
+  },
+  avatar: {
+    width: 28,
+    height: 28,
+    marginLeft: 16,
+    borderRadius: 100,
+    backgroundColor: "#F6F6F6",
+  },
+  commentThumb: {
+    width: "85%",
+    minHeight: 70,
+    padding: 16,
+    backgroundColor: "#F6F6F6",
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  commentText: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#212121",
+  },
+  commentDate: {
+    marginTop: 8,
+    marginLeft: "auto",
+
+    fontSize: 10,
+    lineHeight: 12,
+    color: "#BDBDBD",
+  },
   inputThumb: {
     position: "relative",
     marginTop: "auto",
@@ -104,7 +205,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     display: "flex",
     right: 8,
-    bottom: "50%",
+    bottom: 14,
     width: 34,
     height: 34,
     transform: [{ translateY: -0.5 * 0 }],
