@@ -59,12 +59,9 @@ const PostsScreen = () => {
             </View>
           </View>
           {posts.length > 0 && (
-            <FlatList
-              data={posts}
-              keyExtractor={(item, index) => index.toString()}
-              contentContainerStyle={styles.contentContainer}
-              renderItem={({ item }) => (
-                <View style={styles.post}>
+            <ScrollView >
+              {posts.map((item, index) => (
+                <View style={styles.post} key={index}>
                   <Image
                     style={styles.postImage}
                     source={{ uri: item.photoUri }}
@@ -99,8 +96,8 @@ const PostsScreen = () => {
                     </TouchableOpacity>
                   </View>
                 </View>
-              )}
-            />
+              ))}
+            </ScrollView>
           )}
         </View>
       </View>
@@ -111,6 +108,8 @@ const PostsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 200,
+    backgroundColor: "#FFFFFF",
   },
   header: {
     paddingTop: 55,
