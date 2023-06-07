@@ -1,9 +1,28 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Background from "../Components/Background";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const ProfileScreen = () => {
+  const [posts, setPosts] = useState([]);
+
+  const navigation = useNavigation();
+  const { params } = useRoute();
+
+  useEffect(() => {
+    if (params) {
+      setPosts((state) => [...state, ...params]);
+    }
+  }, [params]);
+
   return (
     <View style={styles.container}>
       <Background />
@@ -23,8 +42,24 @@ const ProfileScreen = () => {
             />
           </TouchableOpacity>
         </View>
-
         <Text style={styles.title}>Natali Romanova</Text>
+        {posts.length > 0 ? (
+          <ScrollView>
+            {posts.map((el, index) => {
+              console.log(el);
+              return (
+                <View key={index}>
+                  <Image
+                    style={styles.postImage}
+                    source={{ uri: el.photoUri }}
+                  />
+                  <Text>{el.name}</Text>
+                  <Text>{el.address}</Text>
+                </View>
+              );
+            })}
+          </ScrollView>
+        ) : null}
       </View>
     </View>
   );
@@ -82,6 +117,13 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Medium",
     textAlign: "center",
     fontSize: 30,
+  },
+  postImage: {
+    width: "100%",
+    height: 240,
+
+    borderWidth: 1,
+    borderRadius: 8,
   },
 });
 

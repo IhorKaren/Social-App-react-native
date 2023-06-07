@@ -25,12 +25,8 @@ const Home = () => {
 
   return (
     <Tabs.Navigator
-      tabBarOptions={{
-        showLabel: false,
-      }}
       screenOptions={{
         tabBarStyle: {
-          showLabel: false,
           position: "absolute",
           bottom: 0,
           height: 83,
@@ -38,6 +34,7 @@ const Home = () => {
           paddingBottom: 34,
           paddingHorizontal: 5,
         },
+        tabBarLabel: () => null,
       }}
     >
       <Tabs.Screen

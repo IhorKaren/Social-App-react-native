@@ -1,86 +1,223 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   TouchableOpacity,
   Text,
   Image,
   TextInput,
+  Keyboard,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
 
 const CreatePostsScreen = () => {
+  const [location, setLocation] = useState(null);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [photoUri, setPhotoUri] = useState(null);
+
   const navigation = useNavigation();
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Створити публікацію</Text>
-        <TouchableOpacity
-          style={styles.goBackBtn}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.content}>
-        <View style={styles.photoThumb}>
-          <View style={styles.photoPlace}>
-            <View style={styles.photoIcon}>
-              <TouchableOpacity
-                style={styles.iconCam}
-                onPress={() => console.log()}
-              >
-                <Ionicons name="camera-outline" size={24} color="#BDBDBD" />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <Text style={styles.photoText}>Завантажте фото</Text>
-        </View>
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Назва..."
-            placeholderTextColor="#BDBDBD"
-            // value={email}
-            // onChangeText={setEmail}
-            keyboardType="email-address"
-          />
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
 
-          <View style={{ position: "relative" }}>
-            <TextInput
-              style={styles.locationInput}
-              placeholder="Місцевість..."
-              placeholderTextColor="#BDBDBD"
-              // value={password}
-              // onChangeText={setPassword}
-            />
-            <Ionicons
-              name="location-outline"
-              size={24}
-              color="#BDBDBD"
-              style={styles.locationIcon}
-            />
-          </View>
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  const handleSubmit = async () => {
+    await checkLocation();
+
+    const post = {
+      photoUri,
+      name,
+      address,
+      location,
+    };
+
+    navigation.navigate("User", [post]);
+
+    setPhotoUri(null);
+    setAddress("");
+    setName("");
+  };
+
+  const takePhoto = async () => {
+    if (photoUri) {
+      setPhotoUri(null);
+      return;
+    }
+
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      await MediaLibrary.createAssetAsync(uri);
+      setPhotoUri(uri);
+    }
+  };
+
+  const checkLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access location was denied");
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+    setLocation(coords);
+  };
+
+  const choosePhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access media library denied");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.didCancel) {
+      setPhotoUri(result.assets[0].uri);
+    }
+  };
+
+  const submitCheck = photoUri && name && address;
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Створити публікацію</Text>
           <TouchableOpacity
-            style={styles.disabledButton}
-            onPress={() => log}
-            disabled
+            style={styles.goBackBtn}
+            onPress={() => navigation.goBack()}
           >
-            <Text style={styles.disabledButtonText}>Опублікувати</Text>
+            <Ionicons name="arrow-back" size={24} />
           </TouchableOpacity>
         </View>
-        <View style={styles.trashButton}>
-          <Ionicons
-            name="trash-outline"
-            size={24}
-            color="#DADADA"
-            style={styles.trashIcon}
-          />
+        <View style={styles.content}>
+          <View style={styles.photoThumb}>
+            <View style={styles.photoPlace}>
+              {photoUri ? (
+                <Image style={styles.camera} source={{ uri: photoUri }} />
+              ) : (
+                <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                  <View style={styles.photoView}>
+                    <TouchableOpacity
+                      style={styles.flipContainer}
+                      onPress={() => {
+                        setType(
+                          type === Camera.Constants.Type.back
+                            ? Camera.Constants.Type.front
+                            : Camera.Constants.Type.back
+                        );
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          marginBottom: 10,
+                          color: "white",
+                        }}
+                      >
+                        {" "}
+                        Flip{" "}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </Camera>
+              )}
+              <View
+                style={
+                  photoUri ? styles.photoIconTransparent : styles.photoIcon
+                }
+              >
+                <TouchableOpacity style={styles.iconCam} onPress={takePhoto}>
+                  <Ionicons
+                    name="camera-outline"
+                    size={24}
+                    color={photoUri ? "#FFFFFF" : "#BDBDBD"}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity onPress={choosePhoto}>
+              <Text style={styles.photoText}>Завантажте фото</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.form}>
+            <TextInput
+              style={styles.input}
+              placeholder="Назва..."
+              placeholderTextColor="#BDBDBD"
+              value={name}
+              onChangeText={setName}
+              keyboardType="email-address"
+            />
+
+            <View style={{ position: "relative" }}>
+              <TextInput
+                style={styles.locationInput}
+                placeholder="Місцевість..."
+                placeholderTextColor="#BDBDBD"
+                value={address}
+                onChangeText={setAddress}
+              />
+              <Ionicons
+                name="location-outline"
+                size={24}
+                color="#BDBDBD"
+                style={styles.locationIcon}
+              />
+            </View>
+            <TouchableOpacity
+              style={submitCheck ? styles.submitButton : styles.disabledButton}
+              onPress={handleSubmit}
+              disabled={!submitCheck}
+            >
+              <Text
+                style={
+                  submitCheck
+                    ? styles.submitButtonText
+                    : styles.disabledButtonText
+                }
+              >
+                Опублікувати
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.trashButton}>
+            <Ionicons
+              name="trash-outline"
+              size={24}
+              color="#DADADA"
+              style={styles.trashIcon}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -96,6 +233,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0, 0, 0, 0.3)",
   },
+  camera: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
+  },
+
   goBackBtn: {
     position: "absolute",
     bottom: 10,
@@ -126,10 +271,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 240,
 
-    borderWidth: 1,
     borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
+    borderWidth: 1,
     borderRadius: 8,
+    overflow: "hidden",
   },
   photoText: {
     marginTop: 8,
@@ -147,6 +293,16 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 100,
     backgroundColor: "#FFFFFF",
+  },
+  photoIconTransparent: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: [{ translateX: -0.5 * 60 }, { translateY: -0.5 * 60 }],
+    width: 60,
+    height: 60,
+    borderRadius: 100,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
   },
   iconCam: {
     position: "absolute",

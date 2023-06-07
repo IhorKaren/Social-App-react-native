@@ -27,13 +27,13 @@ export default function App() {
     <NavigationContainer>
       <StatusBar style="auto" />
       <MainStack.Navigator
-        initialRouteName="Map"
+        initialRouteName="Login"
         screenOptions={{
           headerShown: false,
         }}
       >
         <MainStack.Screen name="Registration" component={RegistrationScreen} />
-        <MainStack.Screen name="Map" component={Map} />
+        <MainStack.Screen name="Login" component={LoginScreen} />
         <MainStack.Screen name="Home" component={Home} />
       </MainStack.Navigator>
     </NavigationContainer>
