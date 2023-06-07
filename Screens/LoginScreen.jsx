@@ -4,7 +4,6 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
-  Image,
   StyleSheet,
   Keyboard,
   KeyboardAvoidingView,
@@ -12,6 +11,7 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Background from "../Components/Background";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -49,16 +49,12 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Image
-          source={require("../images/PhotoBG.jpg")}
-          resizeMode="cover"
-          style={styles.backgroundImage}
-        />
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={-180}
         >
+          <Background />
           <View style={styles.formContainer}>
             <Text style={styles.title}>Увійти</Text>
             <View style={styles.form}>

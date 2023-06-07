@@ -13,6 +13,7 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Background from "../Components/Background";
 
 const RegistrationScreen = () => {
   const [name, setName] = useState("");
@@ -52,11 +53,7 @@ const RegistrationScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Image
-          source={require("../images/PhotoBG.jpg")}
-          resizeMode="cover"
-          style={styles.backgroundImage}
-        />
+        <Background />
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : "height"}

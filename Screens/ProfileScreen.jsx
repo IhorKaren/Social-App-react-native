@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Background from "../Components/Background";
 
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../images/PhotoBG.jpg")}
-        resizeMode="cover"
-        style={styles.backgroundImage}
-      />
+      <Background />
 
       <View style={styles.userContainer}>
         <TouchableOpacity
