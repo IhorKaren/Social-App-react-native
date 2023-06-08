@@ -1,4 +1,5 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext } from "react";
+import AppContext from "../AppContext";
 import {
   View,
   TouchableOpacity,
@@ -14,8 +15,8 @@ import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
-import AppContext from "../AppContext";
 import CameraComponent from "../Components/CameraComponent/CameraComponent";
+import IconCamera from "../Components/IconCamera/IconCamera";
 
 const CreatePostsScreen = () => {
   const [location, setLocation] = useState(null);
@@ -25,8 +26,6 @@ const CreatePostsScreen = () => {
 
   const navigation = useNavigation();
   const { setParams } = useContext(AppContext);
-
-  const cameraRef = useRef(null);
 
   const handleSubmit = () => {
     const post = {
@@ -48,16 +47,10 @@ const CreatePostsScreen = () => {
     setPhotoUri(uri);
   };
 
-  const takePhoto = async () => {
+  const deletePhoto = () => {
     if (photoUri) {
       setPhotoUri(null);
       return;
-    }
-
-    if (cameraRef.current) {
-      const { uri } = await cameraRef.current.takePictureAsync();
-      await MediaLibrary.createAssetAsync(uri);
-      setPhotoUri(uri);
     }
   };
 
@@ -108,6 +101,8 @@ const CreatePostsScreen = () => {
 
   const submitCheck = name === "" || address === "" || photoUri === null;
 
+  const clearButtonCheck = name === "" && address === "" && photoUri === null;
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -126,18 +121,7 @@ const CreatePostsScreen = () => {
               {photoUri ? (
                 <>
                   <Image style={styles.camera} source={{ uri: photoUri }} />
-                  <View style={styles.photoIconTransparent}>
-                    <TouchableOpacity
-                      style={styles.iconCam}
-                      onPress={takePhoto}
-                    >
-                      <Ionicons
-                        name="camera-outline"
-                        size={24}
-                        color={photoUri ? "#FFFFFF" : "#BDBDBD"}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                  <IconCamera transparent={true} takePhoto={deletePhoto} />
                 </>
               ) : (
                 <CameraComponent
@@ -191,11 +175,18 @@ const CreatePostsScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={clearAll} style={styles.trashButton}>
+          <TouchableOpacity
+            onPress={clearAll}
+            style={
+              !clearButtonCheck
+                ? styles.trashButton
+                : styles.trashButtonDisabled
+            }
+          >
             <Ionicons
               name="trash-outline"
               size={24}
-              color={!submitCheck ? "#FF6C00" : "#DADADA"}
+              color="#DADADA"
               style={styles.trashIcon}
             />
           </TouchableOpacity>
@@ -269,23 +260,6 @@ const styles = StyleSheet.create({
     color: "#BDBDBD",
   },
 
-  photoIconTransparent: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -0.5 * 60 }, { translateY: -0.5 * 60 }],
-    width: 60,
-    height: 60,
-    borderRadius: 100,
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-  },
-  iconCam: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -0.5 * 24 }, { translateY: -0.5 * 24 }],
-  },
-
   form: {
     display: "flex",
     gap: 22,
@@ -354,8 +328,20 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -0.3 * 70 }],
 
-    backgroundColor: "#F6F6F6",
     borderRadius: 100,
+    backgroundColor: "#FF6C00",
+  },
+  trashButtonDisabled: {
+    flex: 1,
+    position: "absolute",
+    width: 70,
+    height: 40,
+    bottom: 34,
+    left: "50%",
+    transform: [{ translateX: -0.3 * 70 }],
+
+    borderRadius: 100,
+    backgroundColor: "#F6F6F6",
   },
   trashIcon: {
     position: "absolute",

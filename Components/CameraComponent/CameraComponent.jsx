@@ -3,8 +3,9 @@ import { View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import IconCamera from "../IconCamera/IconCamera";
 
-const CameraComponent = ({ onPhotoTaken, photoUri }) => {
+const CameraComponent = ({ onPhotoTaken }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
@@ -49,15 +50,7 @@ const CameraComponent = ({ onPhotoTaken, photoUri }) => {
           <Ionicons name="camera-reverse-outline" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       </Camera>
-      <View style={styles.photoIcon}>
-        <TouchableOpacity style={styles.iconCam} onPress={takePhoto}>
-          <Ionicons
-            name="camera-outline"
-            size={24}
-            color={photoUri ? "#FFFFFF" : "#BDBDBD"}
-          />
-        </TouchableOpacity>
-      </View>
+      <IconCamera takePhoto={takePhoto} />
     </>
   );
 };
