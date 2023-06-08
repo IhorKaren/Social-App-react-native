@@ -83,8 +83,6 @@ const CreatePostsScreen = () => {
     setLocation(coords);
   };
 
-  checkLocation();
-
   const handleNameChange = (text) => {
     setName(text);
   };
@@ -99,7 +97,9 @@ const CreatePostsScreen = () => {
     setName("");
   };
 
-  const submitCheck = name === "" || address === "" || photoUri === null;
+  checkLocation();
+
+  const submitButtonCheck = name === "" || address === "" || photoUri === null;
 
   const clearButtonCheck = name === "" && address === "" && photoUri === null;
 
@@ -160,13 +160,15 @@ const CreatePostsScreen = () => {
               />
             </View>
             <TouchableOpacity
-              style={!submitCheck ? styles.submitButton : styles.disabledButton}
+              style={
+                !submitButtonCheck ? styles.submitButton : styles.disabledButton
+              }
               onPress={handleSubmit}
-              disabled={submitCheck}
+              disabled={submitButtonCheck}
             >
               <Text
                 style={
-                  !submitCheck
+                  !submitButtonCheck
                     ? styles.submitButtonText
                     : styles.disabledButtonText
                 }

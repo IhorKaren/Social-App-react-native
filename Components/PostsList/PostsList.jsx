@@ -11,7 +11,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import AppContext from "../../AppContext";
 
-const PostsScreenList = () => {
+const PostsList = () => {
   const [posts, setPosts] = useState([]);
   const { params } = useContext(AppContext);
   const navigation = useNavigation();
@@ -66,8 +66,6 @@ const PostsScreenList = () => {
   );
 };
 
-export default PostsScreenList;
-
 const styles = StyleSheet.create({
   post: {
     marginBottom: 34,
@@ -104,3 +102,5 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 });
+
+export default PostsList;

@@ -1,6 +1,6 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 
-const PostsScreenUser = () => {
+const PostsUser = () => {
   return (
     <View style={styles.user}>
       <View style={styles.avatar}></View>
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostsScreenUser;
+export default PostsUser;

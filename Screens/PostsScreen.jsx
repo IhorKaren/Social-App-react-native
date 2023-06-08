@@ -1,8 +1,8 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import PostsScreenList from "../Components/PostsScreenList/PostsScreenList";
-import PostsScreenUser from "../Components/PostsScreenUser/PostsScreenUser";
+import PostsList from "../Components/PostsList/PostsList";
+import PostsUser from "../Components/PostsUser/PostsUser";
 
 const PostsScreen = () => {
   return (
@@ -19,8 +19,8 @@ const PostsScreen = () => {
         </View>
       </View>
       <View style={styles.content}>
-        <PostsScreenUser />
-        <PostsScreenList />
+        <PostsUser />
+        <PostsList />
       </View>
     </View>
   );
