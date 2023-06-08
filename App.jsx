@@ -1,4 +1,7 @@
 import { StatusBar } from "expo-status-bar";
+import { store, persistor } from "./Redux/store";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -27,25 +30,29 @@ export default function App() {
   }
 
   return (
-    <AppContext.Provider value={{ params, setParams }}>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <MainStack.Navigator
-          initialRouteName="Login"
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <MainStack.Screen
-            name="Registration"
-            component={RegistrationScreen}
-          />
-          <MainStack.Screen name="Login" component={LoginScreen} />
-          <MainStack.Screen name="Home" component={Home} />
-          <MainStack.Screen name="Comments" component={CommentsScreen} />
-          <MainStack.Screen name="Map" component={MapScreen} />
-        </MainStack.Navigator>
-      </NavigationContainer>
-    </AppContext.Provider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <AppContext.Provider value={{ params, setParams }}>
+          <NavigationContainer>
+            <StatusBar style="auto" />
+            <MainStack.Navigator
+              initialRouteName="Login"
+              screenOptions={{
+                headerShown: false,
+              }}
+            >
+              <MainStack.Screen
+                name="Registration"
+                component={RegistrationScreen}
+              />
+              <MainStack.Screen name="Login" component={LoginScreen} />
+              <MainStack.Screen name="Home" component={Home} />
+              <MainStack.Screen name="Comments" component={CommentsScreen} />
+              <MainStack.Screen name="Map" component={MapScreen} />
+            </MainStack.Navigator>
+          </NavigationContainer>
+        </AppContext.Provider>
+      </PersistGate>
+    </Provider>
   );
 }

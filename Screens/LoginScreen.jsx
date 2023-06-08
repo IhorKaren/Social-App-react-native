@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { isLogin } from "../Redux/Selectors/selectors";
+import { login } from "../Redux/operations";
 import {
   View,
   TextInput,
@@ -19,6 +22,10 @@ const LoginScreen = () => {
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector(isLogin);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -41,9 +48,16 @@ const LoginScreen = () => {
     };
   }, []);
 
-  const handleRegistration = () => {
-    console.log("Email:", email.trim());
-    console.log("Password:", password.trim());
+  const handleSubmit = () => {
+    const currentUser = { email, password };
+
+    dispatch(login(currentUser));
+    if (isLoggedIn) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
+    }
   };
 
   return (
@@ -84,7 +98,7 @@ const LoginScreen = () => {
               <>
                 <TouchableOpacity
                   style={styles.submitButton}
-                  onPress={() => navigation.navigate("Home")}
+                  onPress={() => handleSubmit()}
                 >
                   <Text style={styles.submitButtonText}>Увійти</Text>
                 </TouchableOpacity>

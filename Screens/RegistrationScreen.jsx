@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config";
 import {
   View,
   TextInput,
@@ -19,6 +21,8 @@ const RegistrationScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  const [user, setUser] = useState(null);
 
   const navigation = useNavigation();
 
@@ -43,10 +47,17 @@ const RegistrationScreen = () => {
     };
   }, []);
 
-  const handleRegistration = () => {
-    console.log("Name:", name.trim());
-    console.log("Email:", email.trim());
-    console.log("Password:", password.trim());
+  const registerDB = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setUser(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
   };
 
   return (
@@ -102,7 +113,7 @@ const RegistrationScreen = () => {
               <>
                 <TouchableOpacity
                   style={styles.submitButton}
-                  onPress={() => navigation.navigate("Home")}
+                  onPress={() => registerDB(email, password)}
                 >
                   <Text style={styles.submitButtonText}>Зареєструватися</Text>
                 </TouchableOpacity>
