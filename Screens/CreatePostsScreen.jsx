@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import {
   View,
   TouchableOpacity,
@@ -12,41 +12,21 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
-import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import AppContext from "../AppContext";
+import CameraComponent from "../Components/CameraComponent/CameraComponent";
 
 const CreatePostsScreen = () => {
   const [location, setLocation] = useState(null);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
-  const [hasPermission, setHasPermission] = useState(null);
-  const [cameraRef, setCameraRef] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
   const [photoUri, setPhotoUri] = useState(null);
 
   const navigation = useNavigation();
-
   const { setParams } = useContext(AppContext);
 
-  
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      await MediaLibrary.requestPermissionsAsync();
-
-      setHasPermission(status === "granted");
-    })();
-  }, []);
-
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  const cameraRef = useRef(null);
 
   const handleSubmit = () => {
     const post = {
@@ -63,16 +43,35 @@ const CreatePostsScreen = () => {
     setName("");
   };
 
+  const handlePhotoTaken = async (uri) => {
+    await MediaLibrary.createAssetAsync(uri);
+    setPhotoUri(uri);
+  };
+
   const takePhoto = async () => {
     if (photoUri) {
       setPhotoUri(null);
       return;
     }
 
-    if (cameraRef) {
-      const { uri } = await cameraRef.takePictureAsync();
+    if (cameraRef.current) {
+      const { uri } = await cameraRef.current.takePictureAsync();
       await MediaLibrary.createAssetAsync(uri);
       setPhotoUri(uri);
+    }
+  };
+
+  const choosePhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access media library denied");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.didCancel) {
+      setPhotoUri(result.assets[0].uri);
     }
   };
 
@@ -93,21 +92,21 @@ const CreatePostsScreen = () => {
 
   checkLocation();
 
-  const choosePhoto = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission to access media library denied");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync();
-
-    if (!result.didCancel) {
-      setPhotoUri(result.assets[0].uri);
-    }
+  const handleNameChange = (text) => {
+    setName(text);
   };
 
-  const submitCheck = photoUri && name && address;
+  const handleAddressChange = (text) => {
+    setAddress(text);
+  };
+
+  const clearAll = () => {
+    setPhotoUri(null);
+    setAddress("");
+    setName("");
+  };
+
+  const submitCheck = name === "" || address === "" || photoUri === null;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -125,47 +124,27 @@ const CreatePostsScreen = () => {
           <View style={styles.photoThumb}>
             <View style={styles.photoPlace}>
               {photoUri ? (
-                <Image style={styles.camera} source={{ uri: photoUri }} />
-              ) : (
-                <Camera style={styles.camera} type={type} ref={setCameraRef}>
-                  <View style={styles.photoView}>
+                <>
+                  <Image style={styles.camera} source={{ uri: photoUri }} />
+                  <View style={styles.photoIconTransparent}>
                     <TouchableOpacity
-                      style={styles.flipContainer}
-                      onPress={() => {
-                        setType(
-                          type === Camera.Constants.Type.back
-                            ? Camera.Constants.Type.front
-                            : Camera.Constants.Type.back
-                        );
-                      }}
+                      style={styles.iconCam}
+                      onPress={takePhoto}
                     >
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          marginBottom: 10,
-                          color: "white",
-                        }}
-                      >
-                        {" "}
-                        Flip{" "}
-                      </Text>
+                      <Ionicons
+                        name="camera-outline"
+                        size={24}
+                        color={photoUri ? "#FFFFFF" : "#BDBDBD"}
+                      />
                     </TouchableOpacity>
                   </View>
-                </Camera>
+                </>
+              ) : (
+                <CameraComponent
+                  onPhotoTaken={handlePhotoTaken}
+                  photoUri={photoUri}
+                />
               )}
-              <View
-                style={
-                  photoUri ? styles.photoIconTransparent : styles.photoIcon
-                }
-              >
-                <TouchableOpacity style={styles.iconCam} onPress={takePhoto}>
-                  <Ionicons
-                    name="camera-outline"
-                    size={24}
-                    color={photoUri ? "#FFFFFF" : "#BDBDBD"}
-                  />
-                </TouchableOpacity>
-              </View>
             </View>
             <TouchableOpacity onPress={choosePhoto}>
               <Text style={styles.photoText}>Завантажте фото</Text>
@@ -177,7 +156,7 @@ const CreatePostsScreen = () => {
               placeholder="Назва..."
               placeholderTextColor="#BDBDBD"
               value={name}
-              onChangeText={setName}
+              onChangeText={handleNameChange}
               keyboardType="email-address"
             />
 
@@ -187,7 +166,7 @@ const CreatePostsScreen = () => {
                 placeholder="Місцевість..."
                 placeholderTextColor="#BDBDBD"
                 value={address}
-                onChangeText={setAddress}
+                onChangeText={handleAddressChange}
               />
               <Ionicons
                 name="location-outline"
@@ -197,13 +176,13 @@ const CreatePostsScreen = () => {
               />
             </View>
             <TouchableOpacity
-              style={submitCheck ? styles.submitButton : styles.disabledButton}
-              onPress={() => handleSubmit()}
-              disabled={!submitCheck}
+              style={!submitCheck ? styles.submitButton : styles.disabledButton}
+              onPress={handleSubmit}
+              disabled={submitCheck}
             >
               <Text
                 style={
-                  submitCheck
+                  !submitCheck
                     ? styles.submitButtonText
                     : styles.disabledButtonText
                 }
@@ -212,14 +191,14 @@ const CreatePostsScreen = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.trashButton}>
+          <TouchableOpacity onPress={clearAll} style={styles.trashButton}>
             <Ionicons
               name="trash-outline"
               size={24}
-              color="#DADADA"
+              color={!submitCheck ? "#FF6C00" : "#DADADA"}
               style={styles.trashIcon}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -289,16 +268,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#BDBDBD",
   },
-  photoIcon: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -0.5 * 60 }, { translateY: -0.5 * 60 }],
-    width: 60,
-    height: 60,
-    borderRadius: 100,
-    backgroundColor: "#FFFFFF",
-  },
+
   photoIconTransparent: {
     position: "absolute",
     top: "50%",
@@ -315,6 +285,7 @@ const styles = StyleSheet.create({
     left: "50%",
     transform: [{ translateX: -0.5 * 24 }, { translateY: -0.5 * 24 }],
   },
+
   form: {
     display: "flex",
     gap: 22,
