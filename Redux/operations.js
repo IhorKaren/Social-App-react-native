@@ -3,9 +3,9 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../config";
+import { auth, db } from "../config";
+import { collection, addDoc } from "firebase/firestore";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { async } from "@firebase/util";
 
 export const logIn = createAsyncThunk(
   "auth/login",
@@ -24,9 +24,10 @@ export const logIn = createAsyncThunk(
         displayName: userName,
         email: userEmail,
         accessToken,
+        uid,
       } = user;
 
-      return { userEmail, accessToken, userName, photoUri };
+      return { userEmail, accessToken, userName, photoUri, uid };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -56,9 +57,15 @@ export const signUp = createAsyncThunk(
         displayName: userName,
         email: userEmail,
         accessToken,
+        uid,
       } = user;
 
-      return { userEmail, accessToken, userName, photoUri };
+      const docRef = await addDoc(collection(db, "users"), {
+        name: displayName,
+        email,
+      });
+
+      return { userEmail, accessToken, userName, photoUri, uid };
     } catch (error) {
       return rejectWithValue(error.message);
     }

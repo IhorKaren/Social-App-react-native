@@ -1,13 +1,20 @@
-import { React } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { logOut } from "../Redux/AuthReducer/authSlice";
+import { id } from "../Redux/Selectors/selectors";
+import { logOut } from "../Redux/Auth/authSlice";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import PostsList from "../Components/PostsList/PostsList";
 import PostsUser from "../Components/PostsUser/PostsUser";
+import { useGetPostsQuery } from "../Redux/Posts/postsApi";
 
 const PostsScreen = () => {
+  const userId = useSelector(id);
+
+  const { data = [] } = useGetPostsQuery({userId});
+
+  console.log(userId);
+
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
@@ -33,7 +40,7 @@ const PostsScreen = () => {
       </View>
       <View style={styles.content}>
         <PostsUser />
-        <PostsList />
+        <PostsList array={data} />
       </View>
     </View>
   );
@@ -42,7 +49,7 @@ const PostsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 200,
+    paddingBottom: 100,
     backgroundColor: "#FFFFFF",
   },
   header: {

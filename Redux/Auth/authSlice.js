@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { logIn, signUp, updateUser } from "../operations";
+import { logIn, signUp } from "../operations";
 import persistReducer from "redux-persist/es/persistReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -10,7 +10,7 @@ const persistConfig = {
 };
 
 const initialState = {
-  user: { name: null, email: null, photo: null },
+  user: { name: null, email: null, photo: null, id: null },
   accessToken: null,
   isLoading: false,
   error: false,
@@ -41,6 +41,7 @@ const authSlice = createSlice({
         state.user.email = action.payload.userEmail;
         state.user.photo = action.payload.photoUri;
         state.user.name = action.payload.userName;
+        state.user.id = action.payload.uid;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
         state.isLoading = false;
@@ -57,6 +58,7 @@ const authSlice = createSlice({
         state.user.email = action.payload.userEmail;
         state.user.photo = action.payload.photoUri;
         state.user.name = action.payload.userName;
+        state.user.id = action.payload.uid;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
         state.isLoading = false;

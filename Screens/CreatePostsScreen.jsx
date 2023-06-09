@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
-import AppContext from "../AppContext";
+import { useSelector } from "react-redux";
+import { id } from "../Redux/Selectors/selectors";
 import {
   View,
   TouchableOpacity,
@@ -17,6 +18,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import CameraComponent from "../Components/CameraComponent/CameraComponent";
 import IconCamera from "../Components/IconCamera/IconCamera";
+import { useAddPostMutation } from "../Redux/Posts/postsApi";
 
 const CreatePostsScreen = () => {
   const [location, setLocation] = useState(null);
@@ -25,18 +27,17 @@ const CreatePostsScreen = () => {
   const [photoUri, setPhotoUri] = useState(null);
 
   const navigation = useNavigation();
-  const { setParams } = useContext(AppContext);
 
-  const handleSubmit = () => {
-    const post = {
-      photoUri,
-      name,
-      address,
-      location,
-    };
+  const userId = useSelector(id);
 
-    setParams([post]);
+  const [addPost] = useAddPostMutation();
+
+  const handleSubmit = async () => {
+    const newPost = { name, address, photo: photoUri, location };
+
+    addPost({ userId, newPost });
     navigation.navigate("Menu");
+
     setPhotoUri(null);
     setAddress("");
     setName("");

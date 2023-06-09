@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import {
   View,
   TouchableOpacity,
@@ -9,36 +9,19 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import AppContext from "../../AppContext";
 
-const ProfileList = () => {
-  const [posts, setPosts] = useState([]);
-  const { params } = useContext(AppContext);
 
+const ProfileList = ({ array }) => {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    if (params) {
-      setPosts((state) => [...state, ...params]);
-    }
-  }, [params]);
-
-  const getImage = () => {
-    return params[0].photoUri;
-  };
-
-  const getLocation = () => {
-    return params[0].location;
-  };
-
   return (
-    posts.length > 0 && (
+    array.length > 0 && (
       <ScrollView>
-        {posts.map((el, index) => {
+        {array.map((item) => {
           return (
-            <View key={index} style={styles.post}>
-              <Image style={styles.postImage} source={{ uri: el.photoUri }} />
-              <Text style={styles.postName}>{el.name}</Text>
+            <View key={item.id} style={styles.post}>
+              <Image style={styles.postImage} source={{ uri: item.photo }} />
+              <Text style={styles.postName}>{item.name}</Text>
               <View style={styles.postThumb}>
                 <View
                   style={{
@@ -49,7 +32,7 @@ const ProfileList = () => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("Comments", getImage())}
+                    onPress={() => navigation.navigate("Comments", item.photo)}
                     style={styles.postInfo}
                   >
                     <Ionicons
@@ -72,13 +55,13 @@ const ProfileList = () => {
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Map", getLocation())}
+                  onPress={() => navigation.navigate("Map", item.location)}
                   style={styles.postInfo}
-                  disabled={getLocation() === null}
+                  disabled={item.location === null}
                 >
                   <Ionicons name="location-outline" size={24} color="#BDBDBD" />
 
-                  <Text style={styles.postAddress}>{el.address}</Text>
+                  <Text style={styles.postAddress}>{item.address}</Text>
                 </TouchableOpacity>
               </View>
             </View>

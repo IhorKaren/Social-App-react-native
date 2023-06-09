@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { id } from "../Redux/Selectors/selectors";
 import { userName, userPhoto } from "../Redux/Selectors/selectors";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { logOut, changePhoto } from "../Redux/AuthReducer/authSlice";
+import { logOut, changePhoto } from "../Redux/Auth/authSlice";
 import { updateUser } from "../Redux/operations";
 import * as ImagePicker from "expo-image-picker";
+import { useGetPostsQuery } from "../Redux/Posts/postsApi";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
@@ -16,9 +18,11 @@ const ProfileScreen = () => {
   const displayName = useSelector(userName);
   const userAvatar = useSelector(userPhoto);
 
-  const state = useSelector((state) => state.auth);
+  const userId = useSelector(id);
 
   const [photoUri, setPhotoUri] = useState(userAvatar ?? null);
+
+  const { data = [] } = useGetPostsQuery({ userId });
 
   const onLogOut = () => {
     dispatch(logOut());
@@ -69,7 +73,7 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
         <Text style={styles.title}>{displayName}</Text>
-        <ProfileList />
+        <ProfileList array={data} />
       </View>
     </View>
   );
