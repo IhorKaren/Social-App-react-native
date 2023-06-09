@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { isLogin } from "../Redux/Selectors/selectors";
 import { signUp } from "../Redux/operations";
-import { auth } from "../config";
 import {
   View,
   TextInput,
@@ -20,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import Background from "../Components/Background";
 
 const RegistrationScreen = () => {
-  const [name, setName] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
@@ -31,8 +29,14 @@ const RegistrationScreen = () => {
 
   const isLoggedIn = useSelector(isLogin);
 
-  const state1 = useSelector((state) => state);
-  // console.log(state1);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -56,16 +60,12 @@ const RegistrationScreen = () => {
   }, []);
 
   const handleSubmit = () => {
-    const currentUser = { email, password };
+    const currentUser = { email, password, displayName };
 
     dispatch(signUp(currentUser));
-
-    if (isLoggedIn) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      });
-    }
+    // if (isLoggedIn) {
+    //   dispatch(updateUser(displayName));
+    // }
   };
 
   return (
@@ -92,8 +92,8 @@ const RegistrationScreen = () => {
               <TextInput
                 style={styles.input}
                 placeholder="Логін"
-                value={name}
-                onChangeText={setName}
+                value={displayName}
+                onChangeText={setDisplayName}
               />
               <TextInput
                 style={styles.input}

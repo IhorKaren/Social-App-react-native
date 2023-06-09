@@ -34,6 +34,7 @@ const authSlice = createSlice({
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.user.email = action.payload.userEmail;
+        state.user.name = action.payload.userName;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
         state.isLoading = false;
@@ -48,7 +49,7 @@ const authSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.user.email = action.payload.userEmail;
-        state.user.name = action.payload.displayName;
+        state.user.name = action.payload.userName;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
         state.isLoading = false;
@@ -64,3 +65,11 @@ const authSlice = createSlice({
 export const { logOut } = authSlice.actions;
 
 export const authReducer = persistReducer(persistConfig, authSlice.reducer);
+
+// .addCase(updateUser.fulfilled, (state, action) => {
+//   state.user.name = action.payload.userName;
+//   state.error = false;
+// })
+// .addCase(updateUser.rejected, (state) => {
+//   state.error = true;
+// });

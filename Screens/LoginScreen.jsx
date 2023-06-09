@@ -27,7 +27,14 @@ const LoginScreen = () => {
 
   const isLoggedIn = useSelector(isLogin);
 
-  
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      });
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -50,17 +57,10 @@ const LoginScreen = () => {
     };
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const currentUser = { email, password };
 
     dispatch(logIn(currentUser));
-    
-    if (isLoggedIn) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      });
-    }
   };
 
   return (
