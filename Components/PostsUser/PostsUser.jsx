@@ -1,15 +1,29 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 
+import { useSelector } from "react-redux";
+import {
+  userName,
+  userEmail,
+  userPhoto,
+} from "../../Redux/Selectors/selectors";
+
 const PostsUser = () => {
+  const displayName = useSelector(userName);
+  const displayEmail = useSelector(userEmail);
+
+  const userAvatar = useSelector(userPhoto);
+
   return (
     <View style={styles.user}>
-      <View style={styles.avatar}></View>
+      {userAvatar ? (
+        <Image style={styles.avatar} source={{ uri: userAvatar }} />
+      ) : <View style={styles.avatar}></View>}
       <View style={styles.thumb}>
         <View>
-          <Text style={styles.name}>Natali Romanova</Text>
+          <Text style={styles.name}>{displayName}</Text>
         </View>
         <View>
-          <Text style={styles.email}>email@example.com</Text>
+          <Text style={styles.email}>{displayEmail}</Text>
         </View>
       </View>
     </View>

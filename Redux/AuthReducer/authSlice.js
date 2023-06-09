@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { logIn, signUp } from "../operations";
+import { logIn, signUp, updateUser } from "../operations";
 import persistReducer from "redux-persist/es/persistReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -10,7 +10,7 @@ const persistConfig = {
 };
 
 const initialState = {
-  user: { name: null, email: null },
+  user: { name: null, email: null, photo: null },
   accessToken: null,
   isLoading: false,
   error: false,
@@ -23,8 +23,13 @@ const authSlice = createSlice({
   reducers: {
     logOut: (state) => {
       (state.user.email = null),
+        (state.user.name = null),
+        (state.user.photo = null),
         (state.accessToken = null),
         (state.isLoggedIn = false);
+    },
+    changePhoto: (state, action) => {
+      state.user.photo = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -34,6 +39,7 @@ const authSlice = createSlice({
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.user.email = action.payload.userEmail;
+        state.user.photo = action.payload.photoUri;
         state.user.name = action.payload.userName;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
@@ -49,6 +55,7 @@ const authSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.user.email = action.payload.userEmail;
+        state.user.photo = action.payload.photoUri;
         state.user.name = action.payload.userName;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
@@ -62,14 +69,8 @@ const authSlice = createSlice({
   },
 });
 
+export const { changePhoto } = authSlice.actions;
+
 export const { logOut } = authSlice.actions;
 
 export const authReducer = persistReducer(persistConfig, authSlice.reducer);
-
-// .addCase(updateUser.fulfilled, (state, action) => {
-//   state.user.name = action.payload.userName;
-//   state.error = false;
-// })
-// .addCase(updateUser.rejected, (state) => {
-//   state.error = true;
-// });

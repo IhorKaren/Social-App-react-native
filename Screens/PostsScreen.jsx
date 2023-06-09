@@ -1,5 +1,5 @@
 import { React } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { logOut } from "../Redux/AuthReducer/authSlice";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
@@ -11,8 +11,7 @@ const PostsScreen = () => {
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
-  const user = useSelector((state) => state);
-  console.log(user);
+
   const onLogOut = () => {
     dispatch(logOut());
 

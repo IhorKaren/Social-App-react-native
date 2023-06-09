@@ -15,6 +15,8 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import Background from "../Components/Background";
 
 const RegistrationScreen = () => {
@@ -22,6 +24,7 @@ const RegistrationScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [photoUri, setPhotoUri] = useState(null);
 
   const navigation = useNavigation();
 
@@ -60,12 +63,28 @@ const RegistrationScreen = () => {
   }, []);
 
   const handleSubmit = () => {
-    const currentUser = { email, password, displayName };
+    const currentUser = { email, password, displayName, photoURL: photoUri };
 
     dispatch(signUp(currentUser));
-    // if (isLoggedIn) {
-    //   dispatch(updateUser(displayName));
-    // }
+  };
+
+  const choosePhoto = async () => {
+    if (photoUri) {
+      setPhotoUri(null);
+      return;
+    }
+
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access media library denied");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.didCancel) {
+      setPhotoUri(result.assets[0].uri);
+    }
   };
 
   return (
@@ -79,9 +98,16 @@ const RegistrationScreen = () => {
         >
           <View style={styles.formContainer}>
             <View style={styles.profileIcon}>
-              <TouchableOpacity onPress={() => console.log("")}>
-                <Image
-                  source={require("../images/add.png")}
+              {photoUri && (
+                <Image style={styles.picture} source={{ uri: photoUri }} />
+              )}
+              <TouchableOpacity onPress={choosePhoto}>
+                <Ionicons
+                  name={
+                    photoUri ? "close-circle-outline" : "add-circle-outline"
+                  }
+                  size={32}
+                  color="#FF6C00"
                   style={styles.addPicture}
                 />
               </TouchableOpacity>
@@ -166,6 +192,12 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#FFFFFF",
   },
+  picture: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+  },
 
   profileIcon: {
     position: "absolute",
@@ -181,7 +213,7 @@ const styles = StyleSheet.create({
   addPicture: {
     position: "absolute",
     bottom: -105,
-    right: -12.5,
+    right: -18,
   },
 
   title: {

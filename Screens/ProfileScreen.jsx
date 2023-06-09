@@ -1,46 +1,74 @@
-import React from "react";
-import { useDispatch} from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userName, userPhoto } from "../Redux/Selectors/selectors";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { logOut } from "../Redux/AuthReducer/authSlice";
+import { logOut, changePhoto } from "../Redux/AuthReducer/authSlice";
+import { updateUser } from "../Redux/operations";
+import * as ImagePicker from "expo-image-picker";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
-
   const navigation = useNavigation();
+  const displayName = useSelector(userName);
+  const userAvatar = useSelector(userPhoto);
+
+  const state = useSelector((state) => state.auth);
+
+  const [photoUri, setPhotoUri] = useState(userAvatar ?? null);
 
   const onLogOut = () => {
-    dispatch(logOut())
+    dispatch(logOut());
 
     navigation.reset({
       index: 0,
       routes: [{ name: "Login" }],
     });
-  }
+  };
+
+  const choosePhoto = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission to access media library denied");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.didCancel) {
+      setPhotoUri(result.assets[0].uri);
+      dispatch(updateUser({ photoURL: result.assets[0].uri }));
+      dispatch(changePhoto(result.assets[0].uri));
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Background />
 
       <View style={styles.userContainer}>
-        <TouchableOpacity
-          style={styles.logOutBtn}
-          onPress={onLogOut}
-        >
+        <TouchableOpacity style={styles.logOutBtn} onPress={onLogOut}>
           <Ionicons name="log-out-outline" size={24} />
         </TouchableOpacity>
         <View style={styles.profileIcon}>
-          <TouchableOpacity onPress={() => console.log("")}>
-            <Image
-              source={require("../images/add.png")}
+          {photoUri ? (
+            <Image style={styles.avatar} source={{ uri: photoUri }} />
+          ) : (
+            <View style={styles.avatar}></View>
+          )}
+          <TouchableOpacity onPress={choosePhoto}>
+            <Ionicons
+              name={photoUri ? "repeat-outline" : "add-circle-outline"}
+              size={32}
+              color="#FF6C00"
               style={styles.addPicture}
             />
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>Natali Romanova</Text>
+        <Text style={styles.title}>{displayName}</Text>
         <ProfileList />
       </View>
     </View>
@@ -80,11 +108,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
   },
-
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+  },
   addPicture: {
     position: "absolute",
-    bottom: -105,
-    right: -12.5,
+    bottom: 16,
+    right: -18,
   },
   logOutBtn: {
     position: "absolute",
