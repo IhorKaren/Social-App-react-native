@@ -1,10 +1,26 @@
 import React from "react";
+import { useDispatch} from "react-redux";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { logOut } from "../Redux/AuthReducer/authSlice";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
 
 const ProfileScreen = () => {
+  const dispatch = useDispatch();
+
+  const navigation = useNavigation();
+
+  const onLogOut = () => {
+    dispatch(logOut())
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Background />
@@ -12,7 +28,7 @@ const ProfileScreen = () => {
       <View style={styles.userContainer}>
         <TouchableOpacity
           style={styles.logOutBtn}
-          onPress={() => console.log("")}
+          onPress={onLogOut}
         >
           <Ionicons name="log-out-outline" size={24} />
         </TouchableOpacity>

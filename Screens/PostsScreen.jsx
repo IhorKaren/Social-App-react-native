@@ -1,19 +1,32 @@
-import React from "react";
+import { React } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { logOut } from "../Redux/AuthReducer/authSlice";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import PostsList from "../Components/PostsList/PostsList";
 import PostsUser from "../Components/PostsUser/PostsUser";
 
 const PostsScreen = () => {
+  const dispatch = useDispatch();
+
+  const navigation = useNavigation();
+
+  const onLogOut = () => {
+    dispatch(logOut());
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Публікації</Text>
         <View>
-          <TouchableOpacity
-            style={styles.logOutBtn}
-            onPress={() => console.log("")}
-          >
+          <TouchableOpacity style={styles.logOutBtn} onPress={onLogOut}>
             <Ionicons name="log-out-outline" size={24} />
           </TouchableOpacity>
         </View>

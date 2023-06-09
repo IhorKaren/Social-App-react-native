@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { login } from "../operations";
+import { logIn, signUp } from "../operations";
 import persistReducer from "redux-persist/es/persistReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -10,7 +10,7 @@ const persistConfig = {
 };
 
 const initialState = {
-  user: { email: null },
+  user: { name: null, email: null },
   accessToken: null,
   isLoading: false,
   error: false,
@@ -20,24 +20,47 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logOut: (state) => {
+      (state.user.email = null),
+        (state.accessToken = null),
+        (state.isLoggedIn = false);
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
+      .addCase(logIn.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(login.fulfilled, (state, action) => {
+      .addCase(logIn.fulfilled, (state, action) => {
         state.user.email = action.payload.userEmail;
         state.accessToken = action.payload.accessToken;
         state.isLoggedIn = true;
         state.isLoading = false;
         state.error = false;
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(logIn.rejected, (state) => {
+        state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(signUp.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        state.user.email = action.payload.userEmail;
+        state.user.name = action.payload.displayName;
+        state.accessToken = action.payload.accessToken;
+        state.isLoggedIn = true;
+        state.isLoading = false;
+        state.error = false;
+      })
+      .addCase(signUp.rejected, (state) => {
         state.isLoading = false;
         state.error = true;
       });
   },
 });
+
+export const { logOut } = authSlice.actions;
 
 export const authReducer = persistReducer(persistConfig, authSlice.reducer);

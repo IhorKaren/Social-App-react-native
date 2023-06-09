@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { isLogin } from "../Redux/Selectors/selectors";
+import { signUp } from "../Redux/operations";
 import { auth } from "../config";
 import {
   View,
@@ -22,9 +25,14 @@ const RegistrationScreen = () => {
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-  const [user, setUser] = useState(null);
-
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector(isLogin);
+
+  const state1 = useSelector((state) => state);
+  // console.log(state1);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -47,17 +55,17 @@ const RegistrationScreen = () => {
     };
   }, []);
 
-  const registerDB = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUser(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
+  const handleSubmit = () => {
+    const currentUser = { email, password };
+
+    dispatch(signUp(currentUser));
+
+    if (isLoggedIn) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
       });
+    }
   };
 
   return (
@@ -113,7 +121,7 @@ const RegistrationScreen = () => {
               <>
                 <TouchableOpacity
                   style={styles.submitButton}
-                  onPress={() => registerDB(email, password)}
+                  onPress={handleSubmit}
                 >
                   <Text style={styles.submitButtonText}>Зареєструватися</Text>
                 </TouchableOpacity>
