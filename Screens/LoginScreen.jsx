@@ -27,7 +27,7 @@ const LoginScreen = () => {
 
   const isLoggedIn = useSelector(isLogin);
   const loginError = useSelector(checkError);
-  console.log(isLoggedIn);
+
   useEffect(() => {
     if (loginError) {
       Toast.show({
@@ -70,7 +70,7 @@ const LoginScreen = () => {
 
   const handleSubmit = (user) => {
     const currentUser = { email: user.email, password: user.password };
-    console.log(currentUser);
+
     dispatch(logIn(currentUser));
   };
 

@@ -46,17 +46,6 @@ const ProfileList = ({ array }) => {
                     />
                     <Text>{item.comments.length}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => console.log()}
-                    style={styles.postInfo}
-                  >
-                    <Ionicons
-                      name="thumbs-up-outline"
-                      size={24}
-                      color="#BDBDBD"
-                    />
-                    <Text>0</Text>
-                  </TouchableOpacity>
                 </View>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("Map", item.location)}
