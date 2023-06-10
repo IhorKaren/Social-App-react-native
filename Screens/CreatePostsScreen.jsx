@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { id } from "../Redux/Selectors/selectors";
+import { useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -12,13 +10,17 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import * as Location from "expo-location";
-import { useNavigation } from "@react-navigation/native";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
+import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+// 
+import { id } from "../Redux/Selectors/selectors";
+import { useAddPostMutation } from "../Redux/Posts/postsApi";
+// 
 import CameraComponent from "../Components/CameraComponent/CameraComponent";
 import IconCamera from "../Components/IconCamera/IconCamera";
-import { useAddPostMutation } from "../Redux/Posts/postsApi";
 
 const CreatePostsScreen = () => {
   const [location, setLocation] = useState(null);

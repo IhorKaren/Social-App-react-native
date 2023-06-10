@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { isLogin } from "../Redux/Selectors/selectors";
-import { signUp } from "../Redux/operations";
 import {
   View,
   TextInput,
@@ -14,21 +11,25 @@ import {
   TouchableWithoutFeedback,
   Platform,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "react-native-vector-icons/Ionicons";
+//
+import { isLogin } from "../Redux/Selectors/selectors";
+import { signUp } from "../Redux/operations";
+//
 import Background from "../Components/Background";
 
 const RegistrationScreen = () => {
-  const [displayName, setDisplayName] = useState("");
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
   const [photoUri, setPhotoUri] = useState(null);
-
-  const navigation = useNavigation();
-
-  const dispatch = useDispatch();
 
   const isLoggedIn = useSelector(isLogin);
 

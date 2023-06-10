@@ -1,27 +1,28 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { id } from "../Redux/Selectors/selectors";
-import { userName, userPhoto } from "../Redux/Selectors/selectors";
 import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
+import Ionicons from "react-native-vector-icons/Ionicons";
+// 
+import { userName, userPhoto, id } from "../Redux/Selectors/selectors";
 import { logOut, changePhoto } from "../Redux/Auth/authSlice";
 import { updateUser } from "../Redux/operations";
-import * as ImagePicker from "expo-image-picker";
 import { useGetPostsQuery } from "../Redux/Posts/postsApi";
-import Ionicons from "react-native-vector-icons/Ionicons";
+// 
 import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
 
 const ProfileScreen = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const displayName = useSelector(userName);
   const userAvatar = useSelector(userPhoto);
   const userId = useSelector(id);
 
   const [photoUri, setPhotoUri] = useState(userAvatar ?? null);
   const { data = [] } = useGetPostsQuery({ userId });
-
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const onLogOut = () => {
     dispatch(logOut());

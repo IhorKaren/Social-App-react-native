@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import {
   View,
   TouchableOpacity,
@@ -13,11 +12,13 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { userPhoto, id } from "../Redux/Selectors/selectors";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { format } from "date-fns";
 import { uk } from "date-fns/locale";
+import { useSelector } from "react-redux";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+// 
+import { userPhoto, id } from "../Redux/Selectors/selectors";
 import { useAddNewCommentMutation } from "../Redux/Posts/postsApi";
 import { useGetCommentsQuery } from "../Redux/Posts/postsApi";
 

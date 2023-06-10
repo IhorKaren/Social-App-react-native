@@ -6,18 +6,15 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
-import { useState } from "react";
 import Home from "./Screens/Home";
 import LoginScreen from "./Screens/LoginScreen";
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import CommentsScreen from "./Screens/CommentsScreen";
 import MapScreen from "./Screens/MapScreen";
-import AppContext from "./AppContext";
 
 const MainStack = createStackNavigator();
 
 export default function App() {
-  const [params, setParams] = useState(null);
 
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
@@ -32,7 +29,6 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <AppContext.Provider value={{ params, setParams }}>
           <NavigationContainer>
             <StatusBar style="auto" />
             <MainStack.Navigator
@@ -51,7 +47,6 @@ export default function App() {
               <MainStack.Screen name="Map" component={MapScreen} />
             </MainStack.Navigator>
           </NavigationContainer>
-        </AppContext.Provider>
       </PersistGate>
     </Provider>
   );

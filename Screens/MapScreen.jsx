@@ -7,8 +7,8 @@ import {
   StyleSheet,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const MapScreen = () => {
   const navigation = useNavigation();

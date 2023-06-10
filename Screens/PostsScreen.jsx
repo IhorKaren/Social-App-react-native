@@ -1,17 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+// 
 import { id } from "../Redux/Selectors/selectors";
 import { logOut } from "../Redux/Auth/authSlice";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { useGetPostsQuery } from "../Redux/Posts/postsApi";
+// 
 import PostsList from "../Components/PostsList/PostsList";
 import PostsUser from "../Components/PostsUser/PostsUser";
-import { useGetPostsQuery } from "../Redux/Posts/postsApi";
 
 const PostsScreen = () => {
   const userId = useSelector(id);
 
-  const { data = [] } = useGetPostsQuery({userId});
+  const { data = [] } = useGetPostsQuery({ userId });
 
   const dispatch = useDispatch();
 

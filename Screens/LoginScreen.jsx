@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { isLogin } from "../Redux/Selectors/selectors";
-import { logIn } from "../Redux/operations";
 import {
   View,
   TextInput,
@@ -14,16 +11,20 @@ import {
   Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+//
+import { isLogin } from "../Redux/Selectors/selectors";
+import { logIn } from "../Redux/operations";
+//
 import Background from "../Components/Background";
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keyboardOpen, setKeyboardOpen] = useState(false);
-
-  const navigation = useNavigation();
-
-  const dispatch = useDispatch();
 
   const isLoggedIn = useSelector(isLogin);
 
