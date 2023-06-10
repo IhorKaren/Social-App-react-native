@@ -27,7 +27,7 @@ const LoginScreen = () => {
 
   const isLoggedIn = useSelector(isLogin);
   const loginError = useSelector(checkError);
-
+  console.log(isLoggedIn);
   useEffect(() => {
     if (loginError) {
       Toast.show({
