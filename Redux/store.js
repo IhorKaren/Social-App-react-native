@@ -10,7 +10,6 @@ import {
 } from "redux-persist";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { postsApi } from "./Posts/postsApi";
-import { commentsApi } from "./Coments/comentsApi";
 import { authReducer } from "./Auth/authSlice";
 
 const ignoredActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER];
@@ -18,7 +17,6 @@ const ignoredActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER];
 const store = configureStore({
   reducer: {
     [postsApi.reducerPath]: postsApi.reducer,
-    [commentsApi.reducerPath]: commentsApi.reducer,
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -26,9 +24,7 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions,
       },
-    })
-      .concat(postsApi.middleware)
-      .concat(commentsApi.middleware),
+    }).concat(postsApi.middleware),
 });
 
 const persistor = persistStore(store);
