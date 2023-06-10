@@ -31,6 +31,9 @@ const authSlice = createSlice({
     changePhoto: (state, action) => {
       state.user.photo = action.payload;
     },
+    clearError: (state) => {
+      state.error = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,5 +77,7 @@ const authSlice = createSlice({
 export const { changePhoto } = authSlice.actions;
 
 export const { logOut } = authSlice.actions;
+
+export const { clearError } = authSlice.actions;
 
 export const authReducer = persistReducer(persistConfig, authSlice.reducer);
