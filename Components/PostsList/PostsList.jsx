@@ -11,38 +11,44 @@ import { useNavigation } from "@react-navigation/native";
 
 const PostsList = ({ array }) => {
   const navigation = useNavigation();
-
   return (
     array.length > 0 && (
       <ScrollView>
-        {array.map((item) => (
-          <View style={styles.post} key={item.id}>
-            <Image style={styles.postImage} source={{ uri: item.photo }} />
-            <Text style={styles.postName}>{item.name}</Text>
-            <View style={styles.postThumb}>
-              <TouchableOpacity
-                style={styles.postInfo}
-                onPress={() => navigation.navigate("Comments", item.photo)}
-              >
-                <Ionicons
-                  name="chatbubbles-outline"
-                  size={24}
-                  color="#BDBDBD"
-                />
-                <Text>0</Text>
-              </TouchableOpacity>
+        {array.map((item) => {
+          return (
+            <View style={styles.post} key={item.id}>
+              <Image style={styles.postImage} source={{ uri: item.photo }} />
+              <Text style={styles.postName}>{item.name}</Text>
+              <View style={styles.postThumb}>
+                <TouchableOpacity
+                  style={styles.postInfo}
+                  onPress={() =>
+                    navigation.navigate("Comments", {
+                      photo: item.photo,
+                      postId: item.id,
+                    })
+                  }
+                >
+                  <Ionicons
+                    name="chatbubbles-outline"
+                    size={24}
+                    color="#BDBDBD"
+                  />
+                  <Text>0</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Map", item.location)}
-                style={styles.postInfo}
-                disabled={item.location === null}
-              >
-                <Ionicons name="location-outline" size={24} color="#BDBDBD" />
-                <Text style={styles.postAddress}>{item.address}</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Map", item.location)}
+                  style={styles.postInfo}
+                  disabled={item.location === null}
+                >
+                  <Ionicons name="location-outline" size={24} color="#BDBDBD" />
+                  <Text style={styles.postAddress}>{item.address}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
     )
   );

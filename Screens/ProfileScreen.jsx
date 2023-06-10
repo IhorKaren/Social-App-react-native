@@ -13,16 +13,15 @@ import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
 
 const ProfileScreen = () => {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
   const displayName = useSelector(userName);
   const userAvatar = useSelector(userPhoto);
-
   const userId = useSelector(id);
 
   const [photoUri, setPhotoUri] = useState(userAvatar ?? null);
-
   const { data = [] } = useGetPostsQuery({ userId });
+
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const onLogOut = () => {
     dispatch(logOut());

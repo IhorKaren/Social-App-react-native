@@ -13,8 +13,6 @@ const PostsScreen = () => {
 
   const { data = [] } = useGetPostsQuery({userId});
 
-  console.log(userId);
-
   const dispatch = useDispatch();
 
   const navigation = useNavigation();

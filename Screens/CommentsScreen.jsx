@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   TouchableOpacity,
@@ -12,6 +13,11 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import {
+  useAddCommentMutation,
+  useGetCommentsQuery,
+} from "../Redux/Coments/comentsApi";
+import { userPhoto } from "../Redux/Selectors/selectors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { format } from "date-fns";
@@ -19,17 +25,26 @@ import { uk } from "date-fns/locale";
 
 const CommentsScreen = () => {
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
+
+  const userAvatar = useSelector(userPhoto);
 
   const { params } = useRoute();
 
+  const { data = [] } = useGetCommentsQuery({ postId: params.postId });
+
   const navigation = useNavigation();
 
+  const [addComment] = useAddCommentMutation();
+
   const handleCommentSubmit = () => {
-    if (comment.trim() === '') {
-      return
+    if (comment.trim() === "") {
+      return;
     }
-    setComments((s) => [...s, { date: Date.now(), text: comment }]);
+
+    addComment({
+      postId: params.postId,
+      newComment: { date: Date.now(), text: comment },
+    });
     setComment("");
   };
 
@@ -57,16 +72,24 @@ const CommentsScreen = () => {
         <View style={styles.content}>
           {params && (
             <View style={styles.post}>
-              <Image style={styles.postImage} source={{ uri: params }} />
+              <Image style={styles.postImage} source={{ uri: params.photo }} />
             </View>
           )}
           <ScrollView>
-            {comments.length > 0 && (
+            {data.length > 0 && (
               <View style={styles.comments}>
-                {comments.map((el) => {
+                {data.map((el) => {
+                  console.log(data.length);
                   return (
-                    <View key={el.date} style={styles.commentsWrap}>
-                      <View style={styles.avatar}></View>
+                    <View key={el.id} style={styles.commentsWrap}>
+                      {userAvatar ? (
+                        <Image
+                          style={styles.avatar}
+                          source={{ uri: userAvatar }}
+                        />
+                      ) : (
+                        <View style={styles.avatar}></View>
+                      )}
                       <View style={styles.commentThumb}>
                         <Text style={styles.commentText}>{el.text}</Text>
                         <Text style={styles.commentDate}>

@@ -10,7 +10,6 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 
-
 const ProfileList = ({ array }) => {
   const navigation = useNavigation();
 
@@ -32,7 +31,12 @@ const ProfileList = ({ array }) => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => navigation.navigate("Comments", item.photo)}
+                    onPress={() =>
+                      navigation.navigate("Comments", {
+                        photo: item.photo,
+                        postId: item.id,
+                      })
+                    }
                     style={styles.postInfo}
                   >
                     <Ionicons
