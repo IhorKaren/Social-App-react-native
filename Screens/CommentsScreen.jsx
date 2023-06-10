@@ -13,35 +13,38 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import {
-  useAddCommentMutation,
-  useGetCommentsQuery,
-} from "../Redux/Coments/comentsApi";
-import { userPhoto } from "../Redux/Selectors/selectors";
+import { userPhoto, id } from "../Redux/Selectors/selectors";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { format } from "date-fns";
 import { uk } from "date-fns/locale";
+import { useAddNewCommentMutation } from "../Redux/Posts/postsApi";
+import { useGetCommentsQuery } from "../Redux/Posts/postsApi";
 
 const CommentsScreen = () => {
   const [comment, setComment] = useState("");
 
   const userAvatar = useSelector(userPhoto);
 
+  const userId = useSelector(id);
+
   const { params } = useRoute();
 
-  const { data = [] } = useGetCommentsQuery({ postId: params.postId });
+  const { data = [] } = useGetCommentsQuery({ userId, postId: params.postId });
+
+  const comments = data.comments ?? [];
 
   const navigation = useNavigation();
 
-  const [addComment] = useAddCommentMutation();
+  const [addNewComment] = useAddNewCommentMutation();
 
   const handleCommentSubmit = () => {
     if (comment.trim() === "") {
       return;
     }
 
-    addComment({
+    addNewComment({
+      userId,
       postId: params.postId,
       newComment: { date: Date.now(), text: comment },
     });
@@ -76,12 +79,11 @@ const CommentsScreen = () => {
             </View>
           )}
           <ScrollView>
-            {data.length > 0 && (
+            {comments.length > 0 && (
               <View style={styles.comments}>
-                {data.map((el) => {
-                  console.log(data.length);
+                {comments.map((el) => {
                   return (
-                    <View key={el.id} style={styles.commentsWrap}>
+                    <View key={el.date} style={styles.commentsWrap}>
                       {userAvatar ? (
                         <Image
                           style={styles.avatar}

@@ -26,6 +26,7 @@ const PostsList = ({ array }) => {
                     navigation.navigate("Comments", {
                       photo: item.photo,
                       postId: item.id,
+                      data: item.comments,
                     })
                   }
                 >
@@ -34,7 +35,7 @@ const PostsList = ({ array }) => {
                     size={24}
                     color="#BDBDBD"
                   />
-                  <Text>0</Text>
+                  <Text>{item.comments.length}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity

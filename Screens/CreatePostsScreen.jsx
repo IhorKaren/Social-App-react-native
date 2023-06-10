@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { id } from "../Redux/Selectors/selectors";
 import {
@@ -33,7 +33,7 @@ const CreatePostsScreen = () => {
   const [addPost] = useAddPostMutation();
 
   const handleSubmit = async () => {
-    const newPost = { name, address, photo: photoUri, location };
+    const newPost = { name, address, photo: photoUri, location, comments: [] };
 
     addPost({ userId, newPost });
     navigation.navigate("Menu");
