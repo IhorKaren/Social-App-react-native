@@ -44,9 +44,8 @@ const CommentsScreen = () => {
     }
 
     addNewComment({
-      userId,
       postId: params.postId,
-      newComment: { date: Date.now(), text: comment },
+      newComment: { date: Date.now(), text: comment, avatar: userAvatar },
     });
     setComment("");
   };
@@ -87,7 +86,7 @@ const CommentsScreen = () => {
                       {userAvatar ? (
                         <Image
                           style={styles.avatar}
-                          source={{ uri: userAvatar }}
+                          source={{ uri: el.avatar }}
                         />
                       ) : (
                         <View style={styles.avatar}></View>
