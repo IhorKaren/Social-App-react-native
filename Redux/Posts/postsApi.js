@@ -19,9 +19,9 @@ export const postsApi = createApi({
   tagTypes: ["Posts", "Comments"],
   endpoints: (builder) => ({
     getPosts: builder.query({
-      async queryFn({ userId }) {
+      async queryFn() {
         try {
-          const userPostsRef = collection(db, "users", userId, "posts");
+          const userPostsRef = collection(db, "posts");
           const querySnapshot = await getDocs(userPostsRef);
           let posts = [];
           querySnapshot.forEach((doc) => {
@@ -34,10 +34,30 @@ export const postsApi = createApi({
       },
       providesTags: (result, error, userId) => [{ type: "Posts", userId }],
     }),
-    addPost: builder.mutation({
-      async queryFn({ userId, newPost }) {
+    getUserPosts: builder.query({
+      async queryFn(userID) {
         try {
-          const userPostsRef = collection(db, "users", userId, "posts");
+          const userPostsRef = collection(db, "posts");
+          const querySnapshot = await getDocs(userPostsRef);
+          let posts = [];
+          querySnapshot.forEach((doc) => {
+            posts.push({ id: doc.id, ...doc.data() });
+          });
+
+          const userPosts = posts.filter((el) => el.postId === userID);
+
+          console.log(userPosts);
+          return { data: userPosts };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: (result, error, userId) => [{ type: "Posts", userId }],
+    }),
+    addPost: builder.mutation({
+      async queryFn({ newPost }) {
+        try {
+          const userPostsRef = collection(db, "posts");
           const docRef = await addDoc(userPostsRef, newPost);
           return { data: { id: docRef.id, ...newPost } };
         } catch (error) {
@@ -49,9 +69,9 @@ export const postsApi = createApi({
       ],
     }),
     getComments: builder.query({
-      async queryFn({ userId, postId }) {
+      async queryFn({ postId }) {
         try {
-          const postRef = doc(collection(db, "users", userId, "posts"), postId);
+          const postRef = doc(collection(db, "posts"), postId);
           const postSnapshot = await getDoc(postRef);
           const postData = { id: postSnapshot.id, ...postSnapshot.data() };
           return { data: postData };
@@ -88,4 +108,5 @@ export const {
   useAddPostMutation,
   useAddNewCommentMutation,
   useGetCommentsQuery,
+  useGetUserPostsQuery,
 } = postsApi;

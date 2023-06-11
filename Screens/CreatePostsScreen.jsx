@@ -35,7 +35,14 @@ const CreatePostsScreen = () => {
   const [addPost] = useAddPostMutation();
 
   const handleSubmit = async () => {
-    const newPost = { name, address, photo: photoUri, location, comments: [] };
+    const newPost = {
+      postId: userId,
+      name,
+      address,
+      photo: photoUri,
+      location,
+      comments: [],
+    };
 
     addPost({ userId, newPost });
     navigation.navigate("Menu");

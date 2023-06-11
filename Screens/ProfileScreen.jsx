@@ -8,7 +8,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { userName, userPhoto, id } from "../Redux/Selectors/selectors";
 import { logOut, changePhoto } from "../Redux/Auth/authSlice";
 import { updateUser } from "../Redux/operations";
-import { useGetPostsQuery } from "../Redux/Posts/postsApi";
+import { useGetUserPostsQuery } from "../Redux/Posts/postsApi";
 //
 import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
@@ -22,7 +22,7 @@ const ProfileScreen = () => {
   const userId = useSelector(id);
 
   const [photoUri, setPhotoUri] = useState(userAvatar ?? null);
-  const { data = [] } = useGetPostsQuery({ userId });
+  const { data = [] } = useGetUserPostsQuery(userId);
 
   const onLogOut = () => {
     dispatch(logOut());
