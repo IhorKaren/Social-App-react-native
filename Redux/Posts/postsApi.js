@@ -84,9 +84,9 @@ export const postsApi = createApi({
       ],
     }),
     addNewComment: builder.mutation({
-      async queryFn({ userId, postId, newComment }) {
+      async queryFn({ postId, newComment }) {
         try {
-          const postRef = doc(collection(db, "users", userId, "posts"), postId);
+          const postRef = doc(collection(db, "posts"), postId);
           await updateDoc(postRef, {
             comments: arrayUnion(newComment),
           });
