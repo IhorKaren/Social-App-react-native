@@ -17,7 +17,7 @@ const MapScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Карта</Text>
+        <Text style={styles.headerText}>Map</Text>
         <TouchableOpacity
           style={styles.goBackBtn}
           onPress={() => navigation.goBack()}

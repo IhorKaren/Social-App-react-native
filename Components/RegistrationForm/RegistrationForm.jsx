@@ -30,6 +30,9 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
   const navigation = useNavigation();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loginInputActive, setLoginInputActive] = useState(false);
+  const [emailInputActive, setEmailInputActive] = useState(false);
+  const [passwordInputActive, setPasswordInputActive] = useState(false);
 
   const {
     control,
@@ -54,6 +57,30 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
     setShowPassword(!showPassword);
   };
 
+  const loginFocusHandler = () => {
+    setLoginInputActive(true);
+  };
+
+  const loginBlurHandler = () => {
+    setLoginInputActive(false);
+  };
+
+  const emailFocusHandler = () => {
+    setEmailInputActive(true);
+  };
+
+  const emailBlurHandler = () => {
+    setEmailInputActive(false);
+  };
+
+  const passwordFocusHandler = () => {
+    setPasswordInputActive(true);
+  };
+
+  const passwordBlurHandler = () => {
+    setPasswordInputActive(false);
+  };
+
   return (
     <>
       <View style={styles.form}>
@@ -62,9 +89,11 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
           render={({ field: { onChange, value } }) => (
             <TextInput
               placeholder="Login..."
+              onBlur={loginBlurHandler}
+                onFocus={loginFocusHandler}
               onChangeText={onChange}
               value={value}
-              style={styles.input}
+              style={loginInputActive ? styles.activeInput : styles.input}
             />
           )}
           name="login"
@@ -77,8 +106,10 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
             <TextInput
               placeholder="Email..."
               onChangeText={onChange}
+              onBlur={emailBlurHandler}
+              onFocus={emailFocusHandler}
               value={value}
-              style={styles.input}
+              style={emailInputActive ? styles.activeInput : styles.input}
             />
           )}
           name="email"
@@ -91,16 +122,18 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
               <TextInput
                 placeholder="Password..."
                 secureTextEntry={!showPassword}
+                onBlur={passwordBlurHandler}
+                onFocus={passwordFocusHandler}
                 onChangeText={onChange}
                 value={value}
-                style={styles.input}
+                style={passwordInputActive ? styles.activeInput : styles.input}
               />
             )}
             name="password"
           />
           <TouchableOpacity onPress={togglePasswordVisibility}>
             <Text style={styles.showHideText}>
-              {showPassword ? "Приховати" : "Показати"}
+              {showPassword ? "Hide" : "Show"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -112,11 +145,11 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
             style={styles.submitButton}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.submitButtonText}>Зареєструватися</Text>
+            <Text style={styles.submitButtonText}>SIGN UP</Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <Text style={styles.loginText}>
-              Вже є акаунт?{" "}
+              Are you already registered?{" "}
               <Text
                 style={styles.loginLink}
                 onPress={() =>
@@ -126,7 +159,7 @@ const RegistrationForm = ({ formSubmit, keyboardOpen }) => {
                   })
                 }
               >
-                Увійти
+                Go to login page.
               </Text>
             </Text>
           </TouchableOpacity>

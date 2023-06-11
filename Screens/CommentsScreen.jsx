@@ -13,11 +13,10 @@ import {
   ScrollView,
 } from "react-native";
 import { format } from "date-fns";
-import { uk } from "date-fns/locale";
 import { useSelector } from "react-redux";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-// 
+//
 import { userPhoto, id } from "../Redux/Selectors/selectors";
 import { useAddNewCommentMutation } from "../Redux/Posts/postsApi";
 import { useGetCommentsQuery } from "../Redux/Posts/postsApi";
@@ -53,7 +52,7 @@ const CommentsScreen = () => {
   };
 
   const dateFormated = (date) => {
-    return format(date, "dd MMMM, yyyy | HH:mm", { locale: uk });
+    return format(date, "dd MMMM, yyyy | HH:mm");
   };
 
   return (
@@ -64,7 +63,7 @@ const CommentsScreen = () => {
         keyboardVerticalOffset={-260}
       >
         <View style={styles.header}>
-          <Text style={styles.headerText}>Коментарі</Text>
+          <Text style={styles.headerText}>Comments</Text>
           <TouchableOpacity
             style={styles.goBackBtn}
             onPress={() => navigation.goBack()}
@@ -109,7 +108,7 @@ const CommentsScreen = () => {
           <View style={styles.inputThumb}>
             <TextInput
               style={styles.input}
-              placeholder="Коментувати..."
+              placeholder="Leave a comment..."
               placeholderTextColor="#BDBDBD"
               value={comment}
               onChangeText={setComment}

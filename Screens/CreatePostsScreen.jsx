@@ -15,10 +15,10 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-// 
+//
 import { id } from "../Redux/Selectors/selectors";
 import { useAddPostMutation } from "../Redux/Posts/postsApi";
-// 
+//
 import CameraComponent from "../Components/CameraComponent/CameraComponent";
 import IconCamera from "../Components/IconCamera/IconCamera";
 
@@ -110,7 +110,7 @@ const CreatePostsScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Створити публікацію</Text>
+          <Text style={styles.headerText}>Create a publication</Text>
           <TouchableOpacity
             style={styles.goBackBtn}
             onPress={() => navigation.goBack()}
@@ -134,13 +134,13 @@ const CreatePostsScreen = () => {
               )}
             </View>
             <TouchableOpacity onPress={choosePhoto}>
-              <Text style={styles.photoText}>Завантажте фото</Text>
+              <Text style={styles.photoText}>Upload a photo</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              placeholder="Назва..."
+              placeholder="Title..."
               placeholderTextColor="#BDBDBD"
               value={name}
               onChangeText={handleNameChange}
@@ -150,7 +150,7 @@ const CreatePostsScreen = () => {
             <View style={{ position: "relative" }}>
               <TextInput
                 style={styles.locationInput}
-                placeholder="Місцевість..."
+                placeholder="Location..."
                 placeholderTextColor="#BDBDBD"
                 value={address}
                 onChangeText={handleAddressChange}
@@ -176,7 +176,7 @@ const CreatePostsScreen = () => {
                     : styles.disabledButtonText
                 }
               >
-                Опублікувати
+                Publish
               </Text>
             </TouchableOpacity>
           </View>

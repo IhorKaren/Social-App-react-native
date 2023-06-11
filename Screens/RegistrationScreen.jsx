@@ -129,7 +129,7 @@ const RegistrationScreen = () => {
                   />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.title}>Реєстрація</Text>
+              <Text style={styles.title}>Sign up</Text>
               <RegistrationForm
                 formSubmit={handleSubmit}
                 keyboardOpen={keyboardOpen}

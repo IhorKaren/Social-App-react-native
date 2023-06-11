@@ -13,7 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const schema = yup
   .object({
-    email: yup.string().email("Email must be valid").required("Email is required!"),
+    email: yup
+      .string()
+      .email("Email must be valid")
+      .required("Email is required!"),
     password: yup
       .string()
       .required("Password is required!")
@@ -26,6 +29,8 @@ const LoginForm = ({ formSubmit, keyboardOpen }) => {
   const navigation = useNavigation();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [emailInputActive, setEmailInputActive] = useState(false);
+  const [passwordInputActive, setPasswordInputActive] = useState(false);
 
   const {
     control,
@@ -49,6 +54,22 @@ const LoginForm = ({ formSubmit, keyboardOpen }) => {
     setShowPassword(!showPassword);
   };
 
+  const emailFocusHandler = () => {
+    setEmailInputActive(true);
+  };
+
+  const emailBlurHandler = () => {
+    setEmailInputActive(false);
+  };
+
+  const passwordFocusHandler = () => {
+    setPasswordInputActive(true);
+  };
+
+  const passwordBlurHandler = () => {
+    setPasswordInputActive(false);
+  };
+
   return (
     <>
       <View style={styles.form}>
@@ -58,8 +79,10 @@ const LoginForm = ({ formSubmit, keyboardOpen }) => {
             <TextInput
               placeholder="Email..."
               onChangeText={onChange}
+              onBlur={emailBlurHandler}
+              onFocus={emailFocusHandler}
               value={value}
-              style={styles.input}
+              style={emailInputActive ? styles.activeInput : styles.input}
             />
           )}
           name="email"
@@ -72,16 +95,18 @@ const LoginForm = ({ formSubmit, keyboardOpen }) => {
               <TextInput
                 placeholder="Password..."
                 secureTextEntry={!showPassword}
+                onBlur={passwordBlurHandler}
+                onFocus={passwordFocusHandler}
                 onChangeText={onChange}
                 value={value}
-                style={styles.input}
+                style={passwordInputActive ? styles.activeInput : styles.input}
               />
             )}
             name="password"
           />
           <TouchableOpacity onPress={togglePasswordVisibility}>
             <Text style={styles.showHideText}>
-              {showPassword ? "Приховати" : "Показати"}
+              {showPassword ? "Hide" : "Show"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -93,16 +118,16 @@ const LoginForm = ({ formSubmit, keyboardOpen }) => {
             style={styles.submitButton}
             onPress={handleSubmit(onSubmit)}
           >
-            <Text style={styles.submitButtonText}>Увійти</Text>
+            <Text style={styles.submitButtonText}>LOGIN</Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <Text style={styles.loginText}>
-              Ще немає акаунту?{" "}
+              Don't have an account yet?{" "}
               <Text
                 style={styles.loginLink}
                 onPress={() => navigation.navigate("Registration")}
               >
-                Зареєструватися
+                Sign up now.
               </Text>
             </Text>
           </TouchableOpacity>
@@ -128,6 +153,19 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
+
+    padding: 16,
+  },
+
+  activeInput: {
+    width: "100%",
+    fontSize: 16,
+
+    borderWidth: 1,
+    borderRadius: 8,
+
+    backgroundColor: "#F6F6F6",
+    borderColor: "#FF6C00",
 
     padding: 16,
   },

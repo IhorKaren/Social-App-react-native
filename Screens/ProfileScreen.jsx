@@ -4,12 +4,12 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
 import Ionicons from "react-native-vector-icons/Ionicons";
-// 
+//
 import { userName, userPhoto, id } from "../Redux/Selectors/selectors";
 import { logOut, changePhoto } from "../Redux/Auth/authSlice";
 import { updateUser } from "../Redux/operations";
 import { useGetPostsQuery } from "../Redux/Posts/postsApi";
-// 
+//
 import Background from "../Components/Background";
 import ProfileList from "../Components/ProfileList/ProfileList";
 
@@ -34,6 +34,13 @@ const ProfileScreen = () => {
   };
 
   const choosePhoto = async () => {
+    if (photoUri) {
+      dispatch(updateUser({ photoURL: "" }));
+      dispatch(changePhoto(""));
+      setPhotoUri(null);
+      return;
+    }
+
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
       console.log("Permission to access media library denied");
@@ -65,7 +72,7 @@ const ProfileScreen = () => {
           )}
           <TouchableOpacity onPress={choosePhoto}>
             <Ionicons
-              name={photoUri ? "repeat-outline" : "add-circle-outline"}
+              name={photoUri ? "close-circle-outline" : "add-circle-outline"}
               size={32}
               color="#FF6C00"
               style={styles.addPicture}

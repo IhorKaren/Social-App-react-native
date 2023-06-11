@@ -85,7 +85,7 @@ const LoginScreen = () => {
           >
             <Background />
             <View style={styles.formContainer}>
-              <Text style={styles.title}>Увійти</Text>
+              <Text style={styles.title}>Welcome back</Text>
               <LoginForm
                 formSubmit={handleSubmit}
                 keyboardOpen={keyboardOpen}
