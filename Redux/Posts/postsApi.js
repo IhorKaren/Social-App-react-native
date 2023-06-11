@@ -46,7 +46,6 @@ export const postsApi = createApi({
 
           const userPosts = posts.filter((el) => el.postId === userID);
 
-          console.log(userPosts);
           return { data: userPosts };
         } catch (error) {
           return { error };
