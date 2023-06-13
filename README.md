@@ -12,7 +12,7 @@ The application has such features as registration and login, adding/modifying/de
 
 - optionally add a photo.
 
-![App Screenshot](Readme/1.jpg){width="300"}
+<img src="Readme/1.jpg" alt="Моя фотографія" width="300" >
 
 ## Menu page
 
