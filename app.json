@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {
+    "web": {
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
